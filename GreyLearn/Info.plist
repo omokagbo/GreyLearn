@@ -41,8 +41,8 @@
 		<string>Aeonik_OVERVIEW-Medium.ttf</string>
 		<string>Aeonik_OVERVIEW-Regular.ttf</string>
 	</array>
-	<key>UILaunchScreen</key>
-	<dict/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
