@@ -1,18 +1,16 @@
 //
-// AppRoute.swift
+// HomeRoute.swift
 // GreyLearn
 
-//  Created by Emmanuel Omokagbo on 5/7/26
+//  Created by Emmanuel Omokagbo on 5/9/26
 //  Copyright © 2026 Emmanuel Omokagbo. All rights reserved.
-	
+
 import Foundation
 
-enum AppRoute: Hashable {
-    case login
-    case home
-    case path
+enum HomeRoute: Hashable {
     case profile
     case chat
+    case fullPath
     //case todayLearning
-    //case badgeDetails
 }
+

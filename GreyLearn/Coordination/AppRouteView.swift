@@ -16,23 +16,34 @@ struct AppRouteView: View {
 
     var body: some View {
         switch route {
+        case .login:
+            LoginView()
+                .environment(appCoordinator.loginCoordinator)
+            
         case .home:
-            ContentView()
-            // CheckoutCoordinator is also injected because ScannerView's
-            // sub-destination (CheckoutView) needs it from the environment.
-//            ScannerView()
-//                .environment(appCoordinator.scannerCoordinator)
-//                .environment(appCoordinator.checkoutCoordinator)
-
+            HomeView()
+                .environment(appCoordinator.homeCoordinator)
+                .environment(appCoordinator.profileCoordinator)
+                .environment(appCoordinator.pathCoordinator)
+                .environment(appCoordinator.chatCoordinator)
+            
         case .profile:
-            ContentView()
-//            SnapSendView(snapSendService: snapSendService)
-//                .environment(appCoordinator.snapSendCoordinator)
+            ProfileView()
+                .environment(appCoordinator.profileCoordinator)
 
-        case .fullPath:
-            ContentView()
-//            ImageUploadView(uploadService: imageUploadService)
-//                .environment(appCoordinator.imageUploadCoordinator)
+        case .path:
+            PathView()
+                .environment(appCoordinator.pathCoordinator)
+            
+        case .chat:
+            ChatView()
+                .environment(appCoordinator.chatCoordinator)
+            
+//        case .todayLearning:
+//            ContentView()
+            
+//        case .badgeDetails:
+//            ContentView()
         }
     }
 }

@@ -11,23 +11,23 @@ import SwiftUI
 final class AppCoordinator {
     var path = NavigationPath()
 
-//    private(set) var homeCoordinator: HomeCoordinator!
-//    private(set) var scannerCoordinator: ScannerCoordinator!
-//    private(set) var checkoutCoordinator: CheckoutCoordinator!
-//    private(set) var snapSendCoordinator: SnapSendCoordinator!
-//    private(set) var imageUploadCoordinator: ImageUploadCoordinator!
-//
-//    init() {
-//        homeCoordinator        = HomeCoordinator(appCoordinator: self)
-//        scannerCoordinator     = ScannerCoordinator(appCoordinator: self)
-//        checkoutCoordinator    = CheckoutCoordinator(appCoordinator: self)
-//        snapSendCoordinator    = SnapSendCoordinator(appCoordinator: self)
-//        imageUploadCoordinator = ImageUploadCoordinator(appCoordinator: self)
-//    }
-//
-//    func push(_ route: AppRoute) {
-//        path.append(route)
-//    }
+    private(set) var homeCoordinator: HomeCoordinator!
+    private(set) var profileCoordinator: ProfileCoordinator!
+    private(set) var pathCoordinator: PathCoordinator!
+    private(set) var loginCoordinator: LoginCoordinator!
+    private(set) var chatCoordinator: ChatCoordinator!
+
+    init() {
+        homeCoordinator        = HomeCoordinator(appCoordinator: self)
+        profileCoordinator     = ProfileCoordinator(appCoordinator: self)
+        pathCoordinator        = PathCoordinator(appCoordinator: self)
+        loginCoordinator       = LoginCoordinator(appCoordinator: self)
+        chatCoordinator        = ChatCoordinator(appCoordinator: self)
+    }
+
+    func push(_ route: AppRoute) {
+        path.append(route)
+    }
 
     func pop() {
         guard !path.isEmpty else { return }
