@@ -9,9 +9,10 @@ import Foundation
 
 enum StorageKeys: String, CaseIterable {
     // Auth
-    case isLoggedIn    = "isLoggedIn"
-    case currentUser   = "currentUser"
+    case isLoggedIn  = "isLoggedIn"
+    case currentUser = "currentUser"
 
-    // Streaks
-    case streaks       = "streaks"
+    // Streak
+    case streakCount    = "streakCount"
+    case lastStreakDate = "lastStreakDate"
 }

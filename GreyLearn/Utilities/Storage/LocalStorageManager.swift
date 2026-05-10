@@ -58,12 +58,20 @@ struct LocalStorageManager {
         loadBool(for: .isLoggedIn)
     }
 
-    func saveStreaks(_ streaks: [Streak]) {
-        save(streaks, for: .streaks)
+    func saveStreakCount(_ count: Int) {
+        defaults.set(count, forKey: StorageKeys.streakCount.rawValue)
     }
 
-    func loadStreaks() -> [Streak] {
-        load([Streak].self, for: .streaks) ?? []
+    func loadStreakCount() -> Int {
+        defaults.integer(forKey: StorageKeys.streakCount.rawValue)
+    }
+
+    func saveLastStreakDate(_ date: Date) {
+        save(date, for: .lastStreakDate)
+    }
+
+    func loadLastStreakDate() -> Date? {
+        load(Date.self, for: .lastStreakDate)
     }
 
     func clearAll() {

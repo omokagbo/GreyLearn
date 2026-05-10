@@ -57,7 +57,8 @@ final class AppCoordinator {
     func logout() {
         storage.saveLoginState(false)
         storage.remove(for: .currentUser)
-        storage.remove(for: .streaks)
+        storage.remove(for: .streakCount)
+        storage.remove(for: .lastStreakDate)
         isLoggedIn  = false
         currentUser = nil
         path        = NavigationPath()

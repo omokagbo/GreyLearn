@@ -36,80 +36,61 @@ final class HomeViewModel: ObservableObject {
     // MARK: - Streak
 
     /// Called on every app launch / home screen appear.
-    /// Records today if not already recorded, resets if yesterday was missed, then refreshes the display.
+    /// - If today already recorded: just display the saved count.
+    /// - If last active was yesterday: streak is intact, display saved count.
+    /// - If last active was 2+ days ago: reset to 0.
+    /// - If never launched before: start at 0.
     func getStreak() {
-        var entries = localRepo.retrieveStreaks()
+        let calendar     = Calendar.current
+        let today        = calendar.startOfDay(for: Date())
+        let savedCount   = localRepo.loadStreakCount()
+        let lastDate     = localRepo.loadLastStreakDate()
 
-        let calendar = Calendar.current
-        let today    = calendar.startOfDay(for: Date())
+        if let last = lastDate {
+            let lastDay      = calendar.startOfDay(for: last)
+            let daysSinceLast = calendar.dateComponents([.day], from: lastDay, to: today).day ?? 0
 
-        // Already recorded today — just refresh display
-        if entries.contains(where: { calendar.isDateInToday($0.date) }) {
-            refreshStreakDisplay(entries: entries)
-            return
-        }
-
-        // Check if the last entry was yesterday — if not, streak is broken → reset
-        let lastEntry = entries.max(by: { $0.date < $1.date })
-        if let last = lastEntry {
-            let daysSinceLast = calendar.dateComponents([.day], from: calendar.startOfDay(for: last.date), to: today).day ?? 0
-            if daysSinceLast > 1 {
-                // Missed at least one day — reset
-                entries = []
+            switch daysSinceLast {
+            case 0:
+                // Same day — already recorded, just refresh display
+                updateDisplay(count: savedCount)
+            case 1:
+                // Yesterday — streak intact, update lastDate to today
+                localRepo.saveLastStreakDate(today)
+                updateDisplay(count: savedCount)
+            default:
+                // Missed one or more days — reset
+                localRepo.saveStreakCount(0)
+                localRepo.saveLastStreakDate(today)
+                updateDisplay(count: 0)
             }
+        } else {
+            // First ever launch — start at 0
+            localRepo.saveLastStreakDate(today)
+            localRepo.saveStreakCount(0)
+            updateDisplay(count: 0)
         }
-
-        // Record today
-        entries.append(Streak(date: today))
-        localRepo.saveStreaks(entries)
-        refreshStreakDisplay(entries: entries)
     }
 
-    /// Simulates completing a learning activity for the current day.
-    /// Ensures today is recorded (or adds a fresh entry) and refreshes the streak display.
-    /// Hook this into real lesson/module completion events when ready.
+    /// Simulates / records a learning activity.
+    /// Each call increments the streak by 1 and persists immediately.
+    /// Hook into real lesson/module completion when ready.
     func recordActivity() {
-        var entries  = localRepo.retrieveStreaks()
-        let calendar = Calendar.current
-        let today    = calendar.startOfDay(for: Date())
-
-        // Only add today's entry if it isn't already there
-        if !entries.contains(where: { calendar.isDateInToday($0.date) }) {
-            entries.append(Streak(date: today))
-            localRepo.saveStreaks(entries)
-        }
-
-        refreshStreakDisplay(entries: entries)
+        let newCount = localRepo.loadStreakCount() + 1
+        localRepo.saveStreakCount(newCount)
+        localRepo.saveLastStreakDate(Calendar.current.startOfDay(for: Date()))
+        updateDisplay(count: newCount)
     }
 
-    /// Wipes all stored streak data and resets the display to zero.
+    /// Wipes streak data and resets display to 0.
     func clearStreak() {
-        localRepo.saveStreaks([])
-        streak = "🔥 0"
+        localRepo.clearStreak()
+        updateDisplay(count: 0)
     }
 
     // MARK: - Private
 
-    private func refreshStreakDisplay(entries: [Streak]) {
-        // Count only consecutive days up to and including today
-        let calendar  = Calendar.current
-        let today     = calendar.startOfDay(for: Date())
-        let sortedDays = entries
-            .map { calendar.startOfDay(for: $0.date) }
-            .sorted(by: >)  // most recent first
-
-        var count    = 0
-        var expected = today
-
-        for day in sortedDays {
-            if day == expected {
-                count   += 1
-                expected = calendar.date(byAdding: .day, value: -1, to: expected)!
-            } else {
-                break
-            }
-        }
-
-        streak = "🔥 \(count)"
+    private func updateDisplay(count: Int) {
+        streak = "🔥 \(count) \(count < 2 ? "day" : "days")"
     }
 }

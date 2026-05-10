@@ -14,11 +14,24 @@ struct LocalRepository {
         self.storage = storage
     }
 
-    func retrieveStreaks() -> [Streak] {
-        storage.loadStreaks()
+    func loadStreakCount() -> Int {
+        storage.loadStreakCount()
     }
 
-    func saveStreaks(_ streaks: [Streak]) {
-        storage.saveStreaks(streaks)
+    func saveStreakCount(_ count: Int) {
+        storage.saveStreakCount(count)
+    }
+
+    func loadLastStreakDate() -> Date? {
+        storage.loadLastStreakDate()
+    }
+
+    func saveLastStreakDate(_ date: Date) {
+        storage.saveLastStreakDate(date)
+    }
+
+    func clearStreak() {
+        storage.saveStreakCount(0)
+        storage.remove(for: .lastStreakDate)
     }
 }
