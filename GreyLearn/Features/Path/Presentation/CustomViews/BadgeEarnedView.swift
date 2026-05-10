@@ -14,6 +14,8 @@ struct BadgeEarnedView: View {
     @State private var badgeScale: CGFloat = 0.3
     @State private var rotation: Double = -15
     @State private var opacity: Double = 0
+    @State private var isFlipped: Bool = false
+    @State private var flipDegrees: Double = 0
 
     init(module: Module) {
         self.module = module
@@ -22,8 +24,10 @@ struct BadgeEarnedView: View {
     var body: some View {
         VStack {
             Button {
-                //flip badge
-
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.6)) {
+                    flipDegrees += 180
+                    isFlipped.toggle()
+                }
             } label: {
                 HStack {
                     Image("flip")
@@ -51,14 +55,37 @@ struct BadgeEarnedView: View {
                     .scaleEffect(decorationScale)
                     .opacity(opacity)
 
+                // Front face
                 Image("purple-badge")
                     .resizable()
                     .scaledToFit()
                     .frame(height: 150)
-                    .tint(.blue)
                     .scaleEffect(badgeScale)
                     .rotationEffect(.degrees(rotation))
                     .opacity(opacity)
+                    .opacity(isFlipped ? 0 : 1)
+                    .rotation3DEffect(.degrees(flipDegrees), axis: (x: 0, y: 1, z: 0))
+
+                // Back face
+                ZStack {
+                    Circle()
+                        .fill(Color.greyMidPurple)
+                        .frame(height: 150)
+
+                    VStack(spacing: 6) {
+                        AppText(module.name, style: .callout)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(Color.greyPurple)
+                        AppText("✓ Completed", style: .caption)
+                            .foregroundStyle(Color.greyPurple)
+                    }
+                    .padding(16)
+                }
+                .frame(height: 150)
+                .scaleEffect(badgeScale)
+                .opacity(opacity)
+                .opacity(isFlipped ? 1 : 0)
+                .rotation3DEffect(.degrees(flipDegrees + 180), axis: (x: 0, y: 1, z: 0))
             }
             .onAppear {
                 // Decoration blooms out first
