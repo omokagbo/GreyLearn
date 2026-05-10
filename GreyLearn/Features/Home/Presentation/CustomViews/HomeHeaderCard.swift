@@ -10,6 +10,8 @@ import SwiftUI
 struct HomeHeaderCard: View {
     let initials: String
     let streak: String
+    let onProfileTap: () -> Void
+    let onChatTap: () -> Void
 
     var body: some View {
         HStack {
@@ -17,6 +19,7 @@ struct HomeHeaderCard: View {
                 .padding(10)
                 .background(Color.greyMidPurple)
                 .clipShape(Circle())
+                .onTapGesture { onProfileTap() }
             Spacer()
             AppText(streak, style: .headline)
                 .padding(.horizontal, 15)
@@ -34,10 +37,11 @@ struct HomeHeaderCard: View {
                 .padding(10)
                 .background(Color.greyMidPurple)
                 .clipShape(Circle())
+                .onTapGesture { onChatTap() }
         }
     }
 }
 
 #Preview {
-    HomeHeaderCard(initials: "EO", streak: "🔥 5")
+    HomeHeaderCard(initials: "EO", streak: "🔥 5", onProfileTap: {}, onChatTap: {})
 }

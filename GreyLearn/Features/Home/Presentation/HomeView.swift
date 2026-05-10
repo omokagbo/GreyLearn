@@ -36,7 +36,12 @@ struct HomeView: View {
             ScrollView {
                 VStack {
                     VStack {
-                        HomeHeaderCard(initials: student.initials, streak: viewModel.streak)
+                        HomeHeaderCard(
+                                initials: student.initials,
+                                streak: viewModel.streak,
+                                onProfileTap: { appCoordinator.homeCoordinator.push(.profile) },
+                                onChatTap: { appCoordinator.homeCoordinator.push(.chat) }
+                            )
                             .padding(.top, 60)
                             .padding(.horizontal)
                         
