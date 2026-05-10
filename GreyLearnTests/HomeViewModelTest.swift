@@ -43,10 +43,10 @@ final class HomeViewModelTests: XCTestCase {
     }
 
     private func makeViewModel(repository: CourseRepository? = nil) -> HomeViewModel {
-        HomeViewModel(
-            repository: repository ?? StubRepository(course: Course.mockCourse),
+        HomeViewModel(dependencies: HomeDependencies(
+            courseRepository: repository ?? StubRepository(course: Course.mockCourse),
             localRepository: localRepo
-        )
+        ))
     }
 
     func testLoadsCourseFromRepository() async throws {

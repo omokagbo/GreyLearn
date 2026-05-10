@@ -15,11 +15,10 @@ final class HomeViewModel: ObservableObject {
     private let repository: CourseRepository
     private let localRepo: LocalRepository
 
-    init(repository: CourseRepository, localRepository: LocalRepository) {
-        self.repository = repository
-        self.localRepo  = localRepository
-        // Restore persisted streak immediately so it shows before onAppear fires
-        let saved = localRepository.loadStreakCount()
+    init(dependencies: HomeDependencies = .live) {
+        self.repository = dependencies.courseRepository
+        self.localRepo  = dependencies.localRepository
+        let saved = dependencies.localRepository.loadStreakCount()
         streak = Self.format(count: saved)
     }
 

@@ -25,10 +25,7 @@ struct HomeView: View {
     
     init(user: User, dependencies: HomeDependencies = .live) {
         self.user = user
-        _viewModel = StateObject(wrappedValue: HomeViewModel(
-            repository: dependencies.courseRepository,
-            localRepository: dependencies.localRepository
-        ))
+        _viewModel = StateObject(wrappedValue: HomeViewModel(dependencies: dependencies))
     }
     
     var body: some View {
