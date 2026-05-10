@@ -11,6 +11,7 @@ struct HomeHeaderCard: View {
     let initials: String
     let streak: String
     let onProfileTap: () -> Void
+    let onStreakTap: () -> Void
     let onChatTap: () -> Void
 
     var body: some View {
@@ -29,6 +30,7 @@ struct HomeHeaderCard: View {
                     Capsule()
                         .stroke(Color.greyLightPurple, lineWidth: 1)
                 }
+                .onLongPressGesture { onStreakTap() }
             Spacer()
             Image("messaging")
                 .resizable()
@@ -43,5 +45,5 @@ struct HomeHeaderCard: View {
 }
 
 #Preview {
-    HomeHeaderCard(initials: "EO", streak: "🔥 5", onProfileTap: {}, onChatTap: {})
+    HomeHeaderCard(initials: "EO", streak: "🔥 5", onProfileTap: {}, onStreakTap: {}, onChatTap: {})
 }

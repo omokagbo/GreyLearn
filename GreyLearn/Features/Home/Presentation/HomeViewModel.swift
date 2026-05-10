@@ -65,11 +65,27 @@ final class HomeViewModel: ObservableObject {
         refreshStreakDisplay(entries: entries)
     }
 
-    /// Call this when a user completes a learning activity to increment the streak.
+    /// Simulates completing a learning activity for the current day.
+    /// Ensures today is recorded (or adds a fresh entry) and refreshes the streak display.
+    /// Hook this into real lesson/module completion events when ready.
     func recordActivity() {
-        // TODO: Hook this into lesson/module completion events.
-        // Currently streak grows from daily app launches.
-        // When wiring up, call localRepo.saveStreaks() with an updated entry for today.
+        var entries  = localRepo.retrieveStreaks()
+        let calendar = Calendar.current
+        let today    = calendar.startOfDay(for: Date())
+
+        // Only add today's entry if it isn't already there
+        if !entries.contains(where: { calendar.isDateInToday($0.date) }) {
+            entries.append(Streak(date: today))
+            localRepo.saveStreaks(entries)
+        }
+
+        refreshStreakDisplay(entries: entries)
+    }
+
+    /// Wipes all stored streak data and resets the display to zero.
+    func clearStreak() {
+        localRepo.saveStreaks([])
+        streak = "🔥 0"
     }
 
     // MARK: - Private

@@ -39,6 +39,7 @@ struct HomeView: View {
                                 initials: user.initials,
                                 streak: viewModel.streak,
                                 onProfileTap: { appCoordinator.homeCoordinator.push(.profile) },
+                                onStreakTap: { viewModel.recordActivity() },
                                 onChatTap: { appCoordinator.homeCoordinator.push(.chat) }
                             )
                             .padding(.top, 60)
