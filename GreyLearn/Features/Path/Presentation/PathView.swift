@@ -4,7 +4,6 @@
 
 //  Created by Emmanuel Omokagbo on 5/9/26
 //  Copyright © 2026 Emmanuel Omokagbo. All rights reserved.
-    
 
 import SwiftUI
 
@@ -23,6 +22,8 @@ struct PathView: View {
     private let connectorCurveLonelyBoost: CGFloat = 32
     
     var body: some View {
+        @Bindable var coordinator = coordinator
+
         ScrollView {
             VStack(alignment: .leading) {
                 AppText(course.stage.text, style: .caption)
@@ -54,6 +55,11 @@ struct PathView: View {
             .padding()
         }
         .customBackButton()
+        .sheet(item: $coordinator.presentedRoute) {
+            $0.makeView()
+                .presentationDetents([.fraction($0.sheetHeight)])
+                .presentationDragIndicator(.visible)
+        }
     }
     
     @ViewBuilder

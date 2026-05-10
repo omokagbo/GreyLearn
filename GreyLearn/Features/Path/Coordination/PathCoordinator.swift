@@ -10,6 +10,7 @@ import SwiftUI
 @Observable
 final class PathCoordinator: Coordinator {
     private let appCoordinator: AppCoordinator
+    var presentedRoute: PathSheetRoute? = nil
 
     init(appCoordinator: AppCoordinator) {
         self.appCoordinator = appCoordinator
@@ -20,7 +21,7 @@ final class PathCoordinator: Coordinator {
         case .path:
             appCoordinator.push(AppRoute.path(course: Course.mockCourse))
         case .badgeDetails(let module):
-            appCoordinator.push(AppRoute.badgeDetails(module: module))
+            presentedRoute = .badgeDetails(module: module)
         }
     }
 

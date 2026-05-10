@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Module: Codable, Hashable {
+struct Module: Codable, Hashable, Identifiable {
     let id: Int
     let name: String
     let description: String
