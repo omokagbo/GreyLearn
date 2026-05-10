@@ -4,7 +4,7 @@
 
 //  Created by Emmanuel Omokagbo on 5/9/26
 //  Copyright © 2026 Emmanuel Omokagbo. All rights reserved.
-	
+    
 import SwiftUI
 
 @Observable
@@ -21,8 +21,8 @@ final class HomeCoordinator: Coordinator {
             appCoordinator.push(AppRoute.profile)
         case .chat:
             appCoordinator.push(AppRoute.chat)
-        case .fullPath:
-            appCoordinator.push(AppRoute.path)
+        case .path(let course):
+            appCoordinator.push(AppRoute.path(course: course))
 //        case .todayLearning:
 //            appCoordinator.push(AppRoute.todayLearning)
         }

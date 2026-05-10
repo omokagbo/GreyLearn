@@ -10,7 +10,7 @@ import Foundation
 enum AppRoute: Hashable {
     case login
     case home
-    case path
+    case path(course: Course)
     case profile
     case chat
     //case todayLearning

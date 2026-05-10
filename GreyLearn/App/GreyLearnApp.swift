@@ -10,12 +10,14 @@ import SwiftUI
 
 @main
 struct GreyLearnApp: App {
+    @State private var appCoordinator = AppCoordinator()
     @State private var isLaunching = true
 
     var body: some Scene {
         WindowGroup {
             ZStack {
-                ContentView()
+                HomeView(user: User.user)
+                    .environment(appCoordinator)
 
                 if isLaunching {
                     LaunchScreenView()

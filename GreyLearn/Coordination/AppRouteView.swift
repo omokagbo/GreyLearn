@@ -4,7 +4,7 @@
 
 //  Created by Emmanuel Omokagbo on 5/7/26
 //  Copyright © 2026 Emmanuel Omokagbo. All rights reserved.
-	
+    
 import SwiftUI
 
 struct AppRouteView: View {
@@ -21,7 +21,7 @@ struct AppRouteView: View {
                 .environment(appCoordinator.loginCoordinator)
             
         case .home:
-            HomeView()
+            HomeView(user: User.user)
                 .environment(appCoordinator.homeCoordinator)
                 .environment(appCoordinator.profileCoordinator)
                 .environment(appCoordinator.pathCoordinator)
@@ -31,7 +31,7 @@ struct AppRouteView: View {
             ProfileView()
                 .environment(appCoordinator.profileCoordinator)
 
-        case .path:
+        case .path(let course):
             PathView()
                 .environment(appCoordinator.pathCoordinator)
             
