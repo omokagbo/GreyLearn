@@ -57,8 +57,6 @@ final class LocalRepositoryTests: XCTestCase {
         XCTAssertEqual(loaded!.timeIntervalSince1970, date.timeIntervalSince1970, accuracy: 1.0)
     }
 
-    // MARK: - Clear Streak
-
     func testClearStreakResetsCountToZero() {
         repo.saveStreakCount(5)
         repo.clearStreak()
@@ -70,8 +68,6 @@ final class LocalRepositoryTests: XCTestCase {
         repo.clearStreak()
         XCTAssertNil(repo.loadLastStreakDate())
     }
-
-    // MARK: - User
 
     func testSaveAndLoadUser() {
         let user = User(
@@ -96,7 +92,6 @@ final class LocalRepositoryTests: XCTestCase {
         XCTAssertNil(storage.loadUser())
     }
 
-    // MARK: - Login State
 
     func testLoginStateDefaultsToFalse() {
         XCTAssertFalse(storage.loadLoginState())

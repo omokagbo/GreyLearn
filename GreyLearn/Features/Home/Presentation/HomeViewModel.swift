@@ -33,8 +33,6 @@ final class HomeViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Streak
-
     /// Call on every home screen appear.
     /// - Same day  → show persisted count unchanged.
     /// - Yesterday → streak intact, mark today as active, show persisted count.
