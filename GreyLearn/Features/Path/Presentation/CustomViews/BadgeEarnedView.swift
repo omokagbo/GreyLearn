@@ -9,14 +9,21 @@ import SwiftUI
 
 struct BadgeEarnedView: View {
     private let module: Module
-    
+
+    @State private var decorationScale: CGFloat = 0.05
+    @State private var badgeScale: CGFloat = 0.3
+    @State private var rotation: Double = -15
+    @State private var opacity: Double = 0
+
     init(module: Module) {
         self.module = module
     }
+
     var body: some View {
         VStack {
             Button {
                 //flip badge
+
             } label: {
                 HStack {
                     Image("flip")
@@ -33,7 +40,7 @@ struct BadgeEarnedView: View {
                 }
             }
             .padding(20)
-            
+
             ZStack {
                 Image("badge-decoration")
                     .resizable()
@@ -41,23 +48,40 @@ struct BadgeEarnedView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 300)
                     .padding(.horizontal)
-                
+                    .scaleEffect(decorationScale)
+                    .opacity(opacity)
+
                 Image("purple-badge")
                     .resizable()
                     .scaledToFit()
                     .frame(height: 150)
                     .tint(.blue)
+                    .scaleEffect(badgeScale)
+                    .rotationEffect(.degrees(rotation))
+                    .opacity(opacity)
             }
-            
+            .onAppear {
+                // Decoration blooms out first
+                withAnimation(.spring(response: 0.7, dampingFraction: 0.6)) {
+                    decorationScale = 1.0
+                    opacity         = 1.0
+                }
+                // Badge pops in slightly after with a bouncier spring
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.45).delay(0.2)) {
+                    badgeScale = 1.0
+                    rotation   = 0
+                }
+            }
+
             VStack(spacing: 20) {
                 AppText(module.completionTitle, style: .title)
                     .multilineTextAlignment(.center)
-                
+
                 AppText(module.completionCheer, style: .footnote)
                     .multilineTextAlignment(.center)
             }
             .padding(.horizontal)
-            
+
             //keeping it simple. A UIActivityViewController using UIViewControllerRepresentable would be better especially for apps targeting under iOS16
             ShareLink(item: module.shareMessage, preview: SharePreview(module.completionTitle)) {
                 AppText("Share your achievement", style: .button)
