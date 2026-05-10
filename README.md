@@ -63,7 +63,7 @@ GreyLearn/
 
 1. **Clone the repository**
    ```bash
-   git clone https://www.github.com/omokagbo/GreyLearn
+   git clone https://github.com/omokagbo/GreyLearn.git
    cd GreyLearn
    ```
 
