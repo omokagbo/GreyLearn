@@ -60,12 +60,26 @@ struct LoginView: View {
                 .padding(.horizontal)
 
                 // Sign in button
-                PrimaryButton(title: "Sign In") {
-                    if viewModel.validateAll() {
-                        let user = viewModel.buildUser()
+                Button {
+                    viewModel.signIn { user in
                         coordinator.login(with: user)
                     }
+                } label: {
+                    ZStack {
+                        if viewModel.isLoading {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        } else {
+                            Text("Sign In")
+                        }
+                    }
+                    .padding(.vertical, 15)
+                    .frame(maxWidth: .infinity)
+                    .foregroundStyle(.white)
+                    .background(Color.greyPurple)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
+                .disabled(viewModel.isLoading)
                 .padding(.horizontal)
                 .padding(.top, 36)
                 .padding(.bottom, 40)

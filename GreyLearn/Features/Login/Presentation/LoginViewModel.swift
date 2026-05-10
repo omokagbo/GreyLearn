@@ -16,6 +16,7 @@ final class LoginViewModel: ObservableObject {
     @Published var firstNameError: String? = nil
     @Published var lastNameError: String? = nil
     @Published var emailError: String? = nil
+    @Published var isLoading: Bool = false
 
     var isValid: Bool {
         validateAll()
@@ -35,6 +36,16 @@ final class LoginViewModel: ObservableObject {
             return trimmed.wholeMatch(of: regex) == nil ? "Enter a valid email address" : nil
         }()
         return firstNameError == nil && lastNameError == nil && emailError == nil
+    }
+
+    func signIn(onSuccess: @escaping (User) -> Void) {
+        guard validateAll() else { return }
+        isLoading = true
+        let user = buildUser()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+            self?.isLoading = false
+            onSuccess(user)
+        }
     }
 
     func buildUser() -> User {
