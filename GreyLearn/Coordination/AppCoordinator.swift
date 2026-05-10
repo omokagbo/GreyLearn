@@ -15,7 +15,7 @@ final class AppCoordinator {
     var currentUser: User?
 
     @ObservationIgnored
-    private let storage = LocalStorageManager.shared
+    private let storage: LocalStorageManager
 
     private(set) var homeCoordinator: HomeCoordinator!
     private(set) var profileCoordinator: ProfileCoordinator!
@@ -23,9 +23,10 @@ final class AppCoordinator {
     private(set) var loginCoordinator: LoginCoordinator!
     private(set) var chatCoordinator: ChatCoordinator!
 
-    init() {
-        isLoggedIn  = LocalStorageManager.shared.loadLoginState()
-        currentUser = LocalStorageManager.shared.loadUser()
+    init(dependencies: AppDependencies = .live) {
+        storage     = dependencies.storage
+        isLoggedIn  = dependencies.storage.loadLoginState()
+        currentUser = dependencies.storage.loadUser()
 
         homeCoordinator    = HomeCoordinator(appCoordinator: self)
         profileCoordinator = ProfileCoordinator(appCoordinator: self)

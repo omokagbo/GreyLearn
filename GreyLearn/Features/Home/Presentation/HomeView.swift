@@ -23,9 +23,12 @@ struct HomeView: View {
         currentSection?.topics.first(where: { !$0.isCompleted })
     }
     
-    init(user: User, repository: CourseRepository = MockCourseRepository()) {
+    init(user: User, dependencies: HomeDependencies = .live) {
         self.user = user
-        _viewModel = StateObject(wrappedValue: HomeViewModel(repository: repository, localRepository: LocalRepository()))
+        _viewModel = StateObject(wrappedValue: HomeViewModel(
+            repository: dependencies.courseRepository,
+            localRepository: dependencies.localRepository
+        ))
     }
     
     var body: some View {
@@ -99,5 +102,8 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(user: User.user, repository: MockCourseRepository(delayNanoseconds: 0))
+    HomeView(user: User.user, dependencies: HomeDependencies(
+        courseRepository: MockCourseRepository(delayNanoseconds: 0),
+        localRepository: LocalRepository()
+    ))
 }

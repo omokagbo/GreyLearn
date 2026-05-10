@@ -9,7 +9,11 @@ import SwiftUI
 
 struct LoginView: View {
     @Environment(LoginCoordinator.self) private var coordinator
-    @StateObject private var viewModel = LoginViewModel()
+    @StateObject private var viewModel: LoginViewModel
+
+    init(dependencies: LoginDependencies = .live) {
+        _viewModel = StateObject(wrappedValue: dependencies.viewModel)
+    }
 
     var body: some View {
         ScrollView {
