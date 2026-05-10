@@ -89,7 +89,8 @@ struct HomeView: View {
                 viewModel.getStreak()
             }
             .navigationDestination(for: AppRoute.self) { route in
-                
+                AppRouteView(route: route)
+                    .environment(appCoordinator)
             }
         }
     }

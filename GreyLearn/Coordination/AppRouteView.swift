@@ -28,8 +28,10 @@ struct AppRouteView: View {
                 .environment(appCoordinator.chatCoordinator)
             
         case .profile:
-            ProfileView()
-                .environment(appCoordinator.profileCoordinator)
+            ProfileView(user: User.user, onLogout: {
+                appCoordinator.popToRoot()
+            })
+            .environment(appCoordinator.profileCoordinator)
 
         case .path(let course):
             PathView()
