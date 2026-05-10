@@ -4,7 +4,7 @@
 
 //  Created by Emmanuel Omokagbo on 5/9/26
 //  Copyright © 2026 Emmanuel Omokagbo. All rights reserved.
-	
+    
 import Foundation
 
 @Observable
@@ -15,10 +15,14 @@ final class LoginCoordinator: Coordinator {
         self.appCoordinator = appCoordinator
     }
 
+    func login(with user: User) {
+        appCoordinator.login(user: user)
+    }
+
     func push(_ route: LoginRoute) {
         switch route {
         case .login:
-            appCoordinator.push(AppRoute.profile)
+            appCoordinator.push(AppRoute.home)
         }
     }
 
@@ -30,4 +34,3 @@ final class LoginCoordinator: Coordinator {
         appCoordinator.popToRoot()
     }
 }
-

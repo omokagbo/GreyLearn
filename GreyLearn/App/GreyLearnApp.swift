@@ -1,10 +1,10 @@
 //
-// GreyLearnApp.swift
-// GreyLearn
-
+//  GreyLearnApp.swift
+//  GreyLearn
+//
 //  Created by Emmanuel Omokagbo on 5/7/26
 //  Copyright © 2026 Emmanuel Omokagbo. All rights reserved.
-    
+//
 
 import SwiftUI
 
@@ -16,8 +16,13 @@ struct GreyLearnApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                HomeView(user: User.user)
-                    .environment(appCoordinator)
+                if appCoordinator.isLoggedIn, let user = appCoordinator.currentUser {
+                    HomeView(user: user)
+                        .environment(appCoordinator)
+                } else {
+                    LoginView()
+                        .environment(appCoordinator.loginCoordinator)
+                }
 
                 if isLaunching {
                     LaunchScreenView()

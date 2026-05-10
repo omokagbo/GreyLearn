@@ -19,28 +19,33 @@ struct AppRouteView: View {
         case .login:
             LoginView()
                 .environment(appCoordinator.loginCoordinator)
+                .environment(appCoordinator)
             
         case .home:
-            HomeView(user: User.user)
-                .environment(appCoordinator.homeCoordinator)
-                .environment(appCoordinator.profileCoordinator)
-                .environment(appCoordinator.pathCoordinator)
-                .environment(appCoordinator.chatCoordinator)
-            
+            if let user = appCoordinator.currentUser {
+                HomeView(user: user)
+                    .environment(appCoordinator.homeCoordinator)
+                    .environment(appCoordinator.profileCoordinator)
+                    .environment(appCoordinator.pathCoordinator)
+                    .environment(appCoordinator.chatCoordinator)
+            }
+
         case .profile:
-            ProfileView(user: User.user, onLogout: {
-                appCoordinator.popToRoot()
-            })
-            .environment(appCoordinator.profileCoordinator)
+            if let user = appCoordinator.currentUser {
+                ProfileView(user: user, onLogout: {
+                    appCoordinator.logout()
+                })
+                .environment(appCoordinator.profileCoordinator)
+            }
 
         case .path(let course):
             PathView(course: course)
                 .environment(appCoordinator.pathCoordinator)
-            
+    
         case .chat:
             ChatView()
                 .environment(appCoordinator.chatCoordinator)
-
+            
         case .badgeDetails(let module):
             BadgeEarnedView(module: module)
         }
