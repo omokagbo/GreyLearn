@@ -19,13 +19,6 @@ final class LoginCoordinator: Coordinator {
         appCoordinator.login(user: user)
     }
 
-    func push(_ route: LoginRoute) {
-        switch route {
-        case .login:
-            appCoordinator.push(AppRoute.home)
-        }
-    }
-
     func pop() {
         appCoordinator.pop()
     }
