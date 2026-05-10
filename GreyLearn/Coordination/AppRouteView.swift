@@ -34,18 +34,15 @@ struct AppRouteView: View {
             .environment(appCoordinator.profileCoordinator)
 
         case .path(let course):
-            PathView()
+            PathView(course: course)
                 .environment(appCoordinator.pathCoordinator)
             
         case .chat:
             ChatView()
                 .environment(appCoordinator.chatCoordinator)
-            
-//        case .todayLearning:
-//            ContentView()
-            
-//        case .badgeDetails:
-//            ContentView()
+
+        case .badgeDetails(let module):
+            BadgeEarnedView(module: module)
         }
     }
 }

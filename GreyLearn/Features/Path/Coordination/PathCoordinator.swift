@@ -4,7 +4,7 @@
 
 //  Created by Emmanuel Omokagbo on 5/9/26
 //  Copyright © 2026 Emmanuel Omokagbo. All rights reserved.
-	
+    
 import SwiftUI
 
 @Observable
@@ -18,9 +18,9 @@ final class PathCoordinator: Coordinator {
     func push(_ route: PathRoute) {
         switch route {
         case .path:
-            appCoordinator.push(AppRoute.profile)
-//        case .badgeDetails:
-//            appCoordinator.
+            appCoordinator.push(AppRoute.path(course: Course.mockCourse))
+        case .badgeDetails(let module):
+            appCoordinator.push(AppRoute.badgeDetails(module: module))
         }
     }
 
