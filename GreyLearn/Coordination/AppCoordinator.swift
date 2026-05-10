@@ -11,30 +11,11 @@ import SwiftUI
 @Observable
 final class AppCoordinator {
     var path = NavigationPath()
+    var isLoggedIn: Bool
+    var currentUser: User?
 
-    // Persisted login state
     @ObservationIgnored
-    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
-
-    // Persisted user (JSON encoded)
-    @ObservationIgnored
-    @AppStorage("currentUser") private var currentUserData: String = ""
-
-    var currentUser: User? {
-        get {
-            guard let data = currentUserData.data(using: .utf8) else { return nil }
-            return try? JSONDecoder().decode(User.self, from: data)
-        }
-        set {
-            if let user = newValue,
-               let data = try? JSONEncoder().encode(user),
-               let json = String(data: data, encoding: .utf8) {
-                currentUserData = json
-            } else {
-                currentUserData = ""
-            }
-        }
-    }
+    private let storage = LocalStorageManager.shared
 
     private(set) var homeCoordinator: HomeCoordinator!
     private(set) var profileCoordinator: ProfileCoordinator!
@@ -43,6 +24,9 @@ final class AppCoordinator {
     private(set) var chatCoordinator: ChatCoordinator!
 
     init() {
+        isLoggedIn  = LocalStorageManager.shared.loadLoginState()
+        currentUser = LocalStorageManager.shared.loadUser()
+
         homeCoordinator    = HomeCoordinator(appCoordinator: self)
         profileCoordinator = ProfileCoordinator(appCoordinator: self)
         pathCoordinator    = PathCoordinator(appCoordinator: self)
@@ -64,13 +48,17 @@ final class AppCoordinator {
     }
 
     func login(user: User) {
+        storage.saveUser(user)
+        storage.saveLoginState(true)
         currentUser = user
-        isLoggedIn = true
+        isLoggedIn  = true
     }
 
     func logout() {
-        isLoggedIn = false
+        storage.saveLoginState(false)
+        storage.remove(for: .currentUser)
+        isLoggedIn  = false
         currentUser = nil
-        path = NavigationPath()
+        path        = NavigationPath()
     }
 }

@@ -1,5 +1,5 @@
 //
-// DashboardViewModel.swift
+// HomeViewModel.swift
 // GreyLearn
 
 //  Created by Emmanuel Omokagbo on 5/10/26
@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-final class DashboardViewModel: ObservableObject {
+final class HomeViewModel: ObservableObject {
     @Published var activeCourse: Course? = nil
     @Published var streak: String = ""
     private let repository: CourseRepository

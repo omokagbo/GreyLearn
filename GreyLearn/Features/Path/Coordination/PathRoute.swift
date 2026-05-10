@@ -8,7 +8,5 @@
 import Foundation
 
 enum PathRoute: Hashable {
-    case path
     case badgeDetails(module: Module)
 }
-

@@ -10,8 +10,8 @@ import SwiftUI
 struct HomeView: View {
     
     @Environment(AppCoordinator.self) private var appCoordinator
-    @StateObject private var viewModel: DashboardViewModel
-    private let student: User
+    @StateObject private var viewModel: HomeViewModel
+    private let user: User
     
     private var currentModule: Module? {
         viewModel.activeCourse?.modules.first(where: { $0.completionStatus == .inProgress})
@@ -24,8 +24,8 @@ struct HomeView: View {
     }
     
     init(user: User, repository: CourseRepository = MockCourseRepository()) {
-        self.student = user
-        _viewModel = StateObject(wrappedValue: DashboardViewModel(repository: repository, localRepository: LocalRepository()))
+        self.user = user
+        _viewModel = StateObject(wrappedValue: HomeViewModel(repository: repository, localRepository: LocalRepository()))
     }
     
     var body: some View {
@@ -36,7 +36,7 @@ struct HomeView: View {
                 VStack {
                     VStack {
                         HomeHeaderCard(
-                                initials: student.initials,
+                                initials: user.initials,
                                 streak: viewModel.streak,
                                 onProfileTap: { appCoordinator.homeCoordinator.push(.profile) },
                                 onChatTap: { appCoordinator.homeCoordinator.push(.chat) }
@@ -44,7 +44,7 @@ struct HomeView: View {
                             .padding(.top, 60)
                             .padding(.horizontal)
                         
-                        MascotGreetingCard(firstName: student.firstName)
+                        MascotGreetingCard(firstName: user.firstName)
                             .padding(.bottom, 100)
                         
                         Spacer()

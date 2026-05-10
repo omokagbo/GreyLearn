@@ -18,8 +18,6 @@ final class PathCoordinator: Coordinator {
 
     func push(_ route: PathRoute) {
         switch route {
-        case .path:
-            appCoordinator.push(AppRoute.path(course: Course.mockCourse))
         case .badgeDetails(let module):
             presentedRoute = .badgeDetails(module: module)
         }

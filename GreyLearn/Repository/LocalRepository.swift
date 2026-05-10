@@ -8,24 +8,18 @@
 import Foundation
 
 struct LocalRepository {
-    let defaults: UserDefaults
-    
-    init(defaults: UserDefaults = UserDefaults.standard) {
-        self.defaults = defaults
+    private let storage: LocalStorageManager
+
+    init(storage: LocalStorageManager = .shared) {
+        self.storage = storage
     }
-    
-//    func retrieveStreaks() -> [Streak] {
-//        let streaks = defaults.object(forKey: "streaks")
-//        let decoder = JSONDecoder()
-//        let data = try? decoder.decode([Streak].self, from: streaks)
-//        return streaks
-//    }
-//    
-//    func saveStreaks(_ streaks: [Streak]) {
-//        let existingStreak = retrieveStreaks()
-//        let newStreaks = existingStreak + streaks
-//        let encoder: JSONEncoder = JSONEncoder()
-//        let data = try? encoder.encode(newStreaks)
-//        defaults.setValue(newStreaks, forKey: "streaks")
-//    }
+
+    func retrieveStreaks() -> [Streak] {
+        storage.loadStreaks()
+    }
+
+    func saveStreaks(_ streaks: [Streak]) {
+        let existing = retrieveStreaks()
+        storage.saveStreaks(existing + streaks)
+    }
 }
