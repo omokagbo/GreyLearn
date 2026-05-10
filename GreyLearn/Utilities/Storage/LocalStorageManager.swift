@@ -21,6 +21,7 @@ struct LocalStorageManager {
     func save<T: Encodable>(_ value: T, for key: StorageKeys) {
         let data = try? JSONEncoder().encode(value)
         defaults.set(data, forKey: key.rawValue)
+        defaults.synchronize()
     }
 
     func load<T: Decodable>(_ type: T.Type, for key: StorageKeys) -> T? {
@@ -30,6 +31,7 @@ struct LocalStorageManager {
 
     func saveBool(_ value: Bool, for key: StorageKeys) {
         defaults.set(value, forKey: key.rawValue)
+        defaults.synchronize()
     }
 
     func loadBool(for key: StorageKeys) -> Bool {
@@ -59,11 +61,11 @@ struct LocalStorageManager {
     }
 
     func saveStreakCount(_ count: Int) {
-        defaults.set(count, forKey: StorageKeys.streakCount.rawValue)
+        save(count, for: .streakCount)
     }
 
     func loadStreakCount() -> Int {
-        defaults.integer(forKey: StorageKeys.streakCount.rawValue)
+        load(Int.self, for: .streakCount) ?? 0
     }
 
     func saveLastStreakDate(_ date: Date) {
