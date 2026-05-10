@@ -61,11 +61,11 @@ struct LocalStorageManager {
     }
 
     func saveStreakCount(_ count: Int) {
-        save(count, for: .streakCount)
+        defaults.set(count, forKey: StorageKeys.streakCount.rawValue)
     }
 
     func loadStreakCount() -> Int {
-        load(Int.self, for: .streakCount) ?? 0
+        defaults.integer(forKey: StorageKeys.streakCount.rawValue)
     }
 
     func saveLastStreakDate(_ date: Date) {

@@ -1,5 +1,5 @@
 //
-// RepositoryTests.swift
+// CouseRepositoryTests.swift
 // GreyLearn
 
 //  Created by Emmanuel Omokagbo on 5/10/26
@@ -9,7 +9,7 @@ import XCTest
 @testable import GreyLearn
 
 @MainActor
-final class RepositoryTests: XCTestCase {
+final class CouseRepositoryTests: XCTestCase {
 
     func testMockRepositoryReturnsMockCourse() async throws {
         let repository = MockCourseRepository(delayNanoseconds: 0)

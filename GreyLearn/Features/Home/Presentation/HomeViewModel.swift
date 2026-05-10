@@ -23,7 +23,6 @@ final class HomeViewModel: ObservableObject {
         streak = Self.format(count: saved)
     }
 
-    // MARK: - Course
 
     func getCourse() {
         Task {
@@ -88,8 +87,6 @@ final class HomeViewModel: ObservableObject {
         localRepo.clearStreak()
         updateDisplay(0)
     }
-
-    // MARK: - Private
 
     private func updateDisplay(_ count: Int) {
         streak = Self.format(count: count)
