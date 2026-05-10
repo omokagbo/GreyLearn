@@ -19,7 +19,6 @@ struct LocalRepository {
     }
 
     func saveStreaks(_ streaks: [Streak]) {
-        let existing = retrieveStreaks()
-        storage.saveStreaks(existing + streaks)
+        storage.saveStreaks(streaks)
     }
 }
