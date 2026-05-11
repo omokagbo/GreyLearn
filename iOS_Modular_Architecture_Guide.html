@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iOS Modular Architecture — The Complete Hands-On Guide</title>
+<style>
+  /* ── Reset & Base ─────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.75;
+    color: #1a1a2e;
+    background: #f8f9fb;
+    padding: 0;
+  }
+
+  /* ── Layout ───────────────────────────────────── */
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 56px 72px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.08);
+    min-height: 100vh;
+  }
+
+  /* ── Cover ────────────────────────────────────── */
+  .cover {
+    background: linear-gradient(135deg, #6C63FF 0%, #3A86FF 100%);
+    color: white;
+    padding: 60px 72px;
+    margin: -56px -72px 56px;
+    border-radius: 0;
+  }
+  .cover h1 { font-size: 2.6rem; font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
+  .cover p  { font-size: 1.05rem; opacity: 0.9; max-width: 600px; }
+  .cover .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  /* ── Typography ───────────────────────────────── */
+  h1, h2, h3, h4 { font-weight: 700; line-height: 1.3; }
+  h1 { font-size: 2rem;   color: #1a1a2e; margin: 48px 0 16px; border-bottom: 3px solid #6C63FF; padding-bottom: 12px; }
+  h2 { font-size: 1.5rem; color: #1a1a2e; margin: 40px 0 14px; border-left: 4px solid #6C63FF; padding-left: 12px; }
+  h3 { font-size: 1.2rem; color: #2d2d6b; margin: 28px 0 10px; }
+  h4 { font-size: 1rem;   color: #444;    margin: 20px 0 8px; }
+
+  p { margin-bottom: 14px; }
+  strong { color: #2d2d6b; }
+
+  a { color: #6C63FF; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── Lists ────────────────────────────────────── */
+  ul, ol { padding-left: 24px; margin-bottom: 14px; }
+  li { margin-bottom: 6px; }
+
+  /* ── Code ─────────────────────────────────────── */
+  code {
+    font-family: "SF Mono", "JetBrains Mono", "Fira Code", Menlo, monospace;
+    font-size: 0.875em;
+    background: #f0f0f8;
+    border: 1px solid #e0dff5;
+    border-radius: 4px;
+    padding: 2px 6px;
+    color: #6C63FF;
+  }
+  pre {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border-radius: 10px;
+    padding: 24px;
+    overflow-x: auto;
+    margin: 20px 0;
+    border-left: 4px solid #6C63FF;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* ── Tables ───────────────────────────────────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.07);
+  }
+  thead {
+    background: #6C63FF;
+    color: white;
+  }
+  thead th { padding: 12px 16px; text-align: left; font-weight: 600; }
+  tbody tr:nth-child(even) { background: #f5f5fb; }
+  tbody tr:hover { background: #eeeef8; }
+  td { padding: 10px 16px; border-bottom: 1px solid #e8e8f0; }
+
+  /* ── Blockquotes ──────────────────────────────── */
+  blockquote {
+    border-left: 4px solid #6C63FF;
+    background: #f0f0ff;
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-radius: 0 8px 8px 0;
+    color: #444;
+    font-style: italic;
+  }
+  blockquote p { margin-bottom: 0; }
+
+  /* ── HR ───────────────────────────────────────── */
+  hr { border: none; border-top: 2px solid #eee; margin: 40px 0; }
+
+  /* ── Checklist ────────────────────────────────── */
+  li input[type=checkbox] { margin-right: 8px; accent-color: #6C63FF; }
+
+  /* ── TOC ──────────────────────────────────────── */
+  .toc {
+    background: #f8f8ff;
+    border: 1px solid #e0dff5;
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin: 32px 0;
+  }
+  .toc ul { padding-left: 20px; }
+  .toc li { margin-bottom: 4px; font-size: 0.95rem; }
+  .toc a { color: #6C63FF; }
+
+  /* ── Print ────────────────────────────────────── */
+  @media print {
+    body { background: white; }
+    .page { box-shadow: none; padding: 20px; }
+    .cover { margin: -20px -20px 30px; border-radius: 0; }
+    pre { border: 1px solid #ccc; }
+    h1, h2, h3 { page-break-after: avoid; }
+    pre, table { page-break-inside: avoid; }
+  }
+
+  /* ── Syntax highlight overrides (codehilite) ──── */
+  .codehilite { background: #1e1e2e !important; border-radius: 10px; padding: 20px; margin: 20px 0; border-left: 4px solid #6C63FF; }
+  .codehilite pre { background: none; border: none; padding: 0; margin: 0; }
+  .codehilite .k  { color: #cba6f7; } /* keyword */
+  .codehilite .kd { color: #cba6f7; }
+  .codehilite .s  { color: #a6e3a1; } /* string */
+  .codehilite .s1 { color: #a6e3a1; }
+  .codehilite .s2 { color: #a6e3a1; }
+  .codehilite .c1 { color: #6c7086; font-style: italic; } /* comment */
+  .codehilite .n  { color: #cdd6f4; }
+  .codehilite .mi { color: #fab387; } /* number */
+  .codehilite .o  { color: #89dceb; } /* operator */
+  .codehilite .nc { color: #89b4fa; } /* class name */
+  .codehilite .nf { color: #89b4fa; } /* function */
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+  <div class="badge">📦 Swift Package Manager · iOS · Xcode</div>
+  <h1>iOS Modular Architecture</h1>
+  <p>The Complete Hands-On Guide — Everything you need to convert any iOS monolith into a clean, scalable, compiler-enforced modular codebase.</p>
+  <p style="margin-top:20px; font-size:0.85rem; opacity:0.7">Version 1.0 &nbsp;·&nbsp; May 2026 &nbsp;·&nbsp; Created for the GreyLearn iOS Project</p>
+</div>
+
+<h1 id="ios-modular-architecture-the-complete-hands-on-guide">iOS Modular Architecture — The Complete Hands-On Guide</h1>
+<blockquote>
+<p><strong>Who this is for:</strong> iOS developers who want to break a monolithic Xcode project into independent, compiler-enforced modules using Swift Package Manager (SPM) local packages.<br />
+<strong>Tools required:</strong> Xcode 15+, Swift 5.9+, macOS Sonoma or later.<br />
+<strong>After reading this:</strong> You will be able to modularize any iOS application from scratch.</p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#1-why-modularize">Why Modularize?</a></li>
+<li><a href="#2-core-concepts">Core Concepts</a></li>
+<li><a href="#3-the-module-dependency-graph">The Module Dependency Graph</a></li>
+<li><a href="#4-choosing-what-goes-in-each-module">Choosing What Goes in Each Module</a></li>
+<li><a href="#5-creating-a-local-spm-package--step-by-step">Creating a Local SPM Package — Step by Step</a></li>
+<li><a href="#6-writing-packageswift--full-reference">Writing Package.swift — Full Reference</a></li>
+<li><a href="#7-access-control--the-most-important-rule">Access Control — The Most Important Rule</a></li>
+<li><a href="#8-adding-local-packages-to-your-xcode-project">Adding Local Packages to Your Xcode Project</a></li>
+<li><a href="#9-migrating-existing-code--file-by-file">Migrating Existing Code — File by File</a></li>
+<li><a href="#10-handling-common-pitfalls">Handling Common Pitfalls</a></li>
+<li><a href="#11-testing-in-a-modular-architecture">Testing in a Modular Architecture</a></li>
+<li><a href="#12-the-composition-root-pattern">The Composition Root Pattern</a></li>
+<li><a href="#13-a-complete-real-world-example">A Complete Real-World Example</a></li>
+<li><a href="#14-module-architecture-patterns-reference">Module Architecture Patterns Reference</a></li>
+<li><a href="#15-checklist--before-you-ship">Checklist — Before You Ship</a></li>
+</ol>
+<hr />
+<h2 id="1-why-modularize">1. Why Modularize?</h2>
+<p>Before investing time in this process, understand the concrete benefits. The table below compares what life looks like before and after modularization.</p>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Monolith</th>
+<th>Modular</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Build times</strong></td>
+<td>Full rebuild on any change</td>
+<td>Only changed modules recompile</td>
+</tr>
+<tr>
+<td><strong>Team ownership</strong></td>
+<td>Any file can depend on any other</td>
+<td>Module boundaries are compiler-enforced</td>
+</tr>
+<tr>
+<td><strong>Accidental coupling</strong></td>
+<td>Easy; nothing stops it</td>
+<td>Impossible unless you explicitly <code>import</code></td>
+</tr>
+<tr>
+<td><strong>Feature isolation</strong></td>
+<td>Hard; shared globals everywhere</td>
+<td>Each feature is an independent library</td>
+</tr>
+<tr>
+<td><strong>Testability</strong></td>
+<td>Entire app must be linked to test one view model</td>
+<td>Test <code>Domain</code> alone with no SwiftUI</td>
+</tr>
+<tr>
+<td><strong>Previews</strong></td>
+<td>May break when other files are broken</td>
+<td>Feature package Previews work in isolation</td>
+</tr>
+<tr>
+<td><strong>Onboarding</strong></td>
+<td>New developer must understand everything</td>
+<td>New developer owns one package</td>
+</tr>
+<tr>
+<td><strong>Reuse across targets</strong></td>
+<td>Copy-paste</td>
+<td><code>import PackageName</code> in any target</td>
+</tr>
+</tbody>
+</table>
+<h3 id="when-not-to-modularize">When NOT to modularize</h3>
+<ul>
+<li>Very small apps (&lt; 20 Swift files) — the overhead isn't worth it.</li>
+<li>Solo projects with no build time problems.</li>
+<li>Prototypes / proof-of-concept work.</li>
+</ul>
+<hr />
+<h2 id="2-core-concepts">2. Core Concepts</h2>
+<h3 id="21-what-is-a-module">2.1 What is a Module?</h3>
+<p>A <strong>module</strong> in Swift is a single unit of code distribution. When you write <code>import Foundation</code>, <code>import SwiftUI</code>, or <code>import MyPackage</code>, you're importing a module. Each module has its own namespace and its own <code>public</code>/<code>internal</code> boundary.</p>
+<p>In Xcode, modules come from:
+- <strong>Framework targets</strong> (<code>.framework</code>)
+- <strong>Swift Package Manager targets</strong> (<code>.swiftmodule</code>)
+- <strong>System libraries</strong></p>
+<p>For modular iOS apps we use <strong>SPM local packages</strong> — they're the simplest, require no extra build system, and integrate perfectly with Xcode.</p>
+<h3 id="22-what-is-a-local-package">2.2 What is a Local Package?</h3>
+<p>A local package is a directory containing a <code>Package.swift</code> manifest file and source code. Unlike remote packages (fetched from GitHub), a local package lives inside your repository:</p>
+<pre class="codehilite"><code>MyApp/
+├── MyApp.xcodeproj/
+├── MyApp/                   ← main app target source
+└── Packages/                ← all local packages live here
+    ├── Core/
+    │   ├── Package.swift
+    │   └── Sources/
+    │       └── Core/
+    │           └── MyFile.swift
+    └── Domain/
+        ├── Package.swift
+        └── Sources/
+            └── Domain/
+</code></pre>
+
+<h3 id="23-what-is-a-dependency-graph">2.3 What is a Dependency Graph?</h3>
+<p>Every module can depend on other modules. If <code>FeatureLogin</code> imports <code>Domain</code>, then <code>Domain</code> is a <strong>dependency</strong> of <code>FeatureLogin</code>. The full picture of who depends on whom is the <strong>dependency graph</strong>.</p>
+<p>The rules:
+- <strong>No cycles.</strong> If <code>A</code> depends on <code>B</code>, then <code>B</code> must NOT depend on <code>A</code>.
+- <strong>Dependencies are transitive.</strong> If <code>A</code> depends on <code>B</code> and <code>B</code> depends on <code>C</code>, then <code>A</code> can use types from <code>C</code> only if <code>C</code> re-exports them or <code>A</code> also explicitly imports <code>C</code>.
+- <strong>The main app target is the root.</strong> It depends on everything; nothing depends on it.</p>
+<hr />
+<h2 id="3-the-module-dependency-graph">3. The Module Dependency Graph</h2>
+<p>This is the most important step. You design the graph BEFORE writing a single line of code.</p>
+<h3 id="31-standard-layer-cake-for-ios-apps">3.1 Standard Layer Cake for iOS Apps</h3>
+<p>The most common architecture looks like this (arrows mean "depends on / imports"):</p>
+<pre class="codehilite"><code>┌─────────────────────────────────────────────────────────┐
+│                    App Target (thin)                     │
+│         GreyLearnApp.swift  +  AppRouteView.swift        │
+└───┬──────────┬───────────┬──────────┬───────────┬───────┘
+    │          │           │          │           │
+    ▼          ▼           ▼          ▼           ▼
+Feature    Feature     Feature    Feature    Feature
+ Home       Login       Path      Profile     Chat
+    │          │           │          │           │
+    └──────────┴───────────┴──────────┴───────────┘
+                           │
+                           ▼
+                    AppCoordination
+                  (all coordinators,
+                   routes, app-level DI)
+                    /             \
+                   ▼               ▼
+               Domain          DesignSystem
+           (entities,         (colors, fonts,
+            repos,             shared UI
+            storage)           components)
+                \                  /
+                 ▼                ▼
+                        Core
+                  (Foundation-only
+                   helpers, extensions)
+</code></pre>
+
+<h3 id="32-the-golden-rules">3.2 The Golden Rules</h3>
+<p><strong>Rule 1 — Lower layers know nothing about upper layers.</strong><br />
+<code>Domain</code> never imports <code>DesignSystem</code>, <code>AppCoordination</code>, or any Feature package. It only knows about <code>Core</code>.</p>
+<p><strong>Rule 2 — Feature packages never import each other.</strong><br />
+<code>FeatureHome</code> never imports <code>FeatureLogin</code>. If they need to share something, that shared thing belongs in a lower layer (<code>Domain</code> or <code>DesignSystem</code>).</p>
+<p><strong>Rule 3 — The app target is the only place that imports everything.</strong><br />
+<code>GreyLearnApp.swift</code> can import <code>FeatureHome</code>, <code>FeatureLogin</code>, <code>FeatureChat</code>, etc. No package can do this.</p>
+<p><strong>Rule 4 — Design the graph on paper first.</strong><br />
+Draw it out before you create any packages. Changing the graph later (to break a cycle) requires moving files between packages, which is painful.</p>
+<h3 id="33-how-to-design-your-own-graph">3.3 How to Design Your Own Graph</h3>
+<p>Answer these questions for your app:</p>
+<p><strong>Step 1:</strong> What are your pure data types? (Models, entities, DTOs)<br />
+→ These go in <code>Domain</code> or <code>Core</code>. They have no SwiftUI, no UI logic.</p>
+<p><strong>Step 2:</strong> What UI components are used in more than one feature?<br />
+→ These go in <code>DesignSystem</code>. (Buttons, labels, color tokens, fonts.)</p>
+<p><strong>Step 3:</strong> What types does navigation depend on? (Route enums, coordinators)<br />
+→ These go in <code>AppCoordination</code>. This package imports <code>Domain</code> (routes carry model types like <code>Course</code>) and <code>DesignSystem</code> (coordinators may need UI types).</p>
+<p><strong>Step 4:</strong> What is unique to each feature?<br />
+→ Each feature gets its own package: <code>FeatureX</code>. It imports <code>AppCoordination</code>, <code>Domain</code>, and <code>DesignSystem</code>.</p>
+<p><strong>Step 5:</strong> What is the absolute minimum that must stay in the app target?<br />
+→ <code>@main</code> entry point + any file that imports ALL feature packages (e.g., a route→view mapping view like <code>AppRouteView</code>).</p>
+<hr />
+<h2 id="4-choosing-what-goes-in-each-module">4. Choosing What Goes in Each Module</h2>
+<h3 id="41-the-core-package">4.1 The <code>Core</code> Package</h3>
+<p><strong>What belongs here:</strong>
+- Pure Swift extensions on standard library types (<code>Array</code>, <code>String</code>, <code>Date</code>, <code>Int</code>, etc.)
+- General-purpose utilities with zero dependencies
+- No <code>import SwiftUI</code>, no <code>import UIKit</code>, no <code>import Combine</code></p>
+<p><strong>What does NOT belong here:</strong>
+- Anything domain-specific (e.g., <code>User</code>, <code>Course</code>)
+- Anything that touches the network, storage, or UI</p>
+<p><strong>Example contents:</strong></p>
+<pre class="codehilite"><code>Core/Sources/Core/
+├── Array+Extension.swift     // chunked(into:), etc.
+├── Date+Extension.swift      // daysFromNow(_:), timeOfDayGreeting
+└── String+Extension.swift    // firstLetter, isValidEmail, etc.
+</code></pre>
+
+<h3 id="42-the-domain-package">4.2 The <code>Domain</code> Package</h3>
+<p><strong>What belongs here:</strong>
+- All entity / model structs (<code>User</code>, <code>Product</code>, <code>Order</code>, etc.)
+- Repository protocols (<code>UserRepository</code>, <code>CourseRepository</code>)
+- Mock / stub implementations of those protocols
+- Storage helpers (<code>UserDefaults</code> wrappers, <code>KeychainManager</code>)
+- Error types</p>
+<p><strong>What does NOT belong here:</strong>
+- Any SwiftUI view
+- Any view model
+- Any coordinator</p>
+<p><strong>Why protocols here?</strong><br />
+Your feature packages code against the protocol. The real implementation (network, database) can be swapped in without touching the feature at all. This is the Dependency Inversion Principle.</p>
+<pre class="codehilite"><code>Domain/Sources/Domain/
+├── Entities/
+│   ├── User.swift
+│   ├── Product.swift
+│   └── Order.swift
+├── Repository/
+│   ├── UserRepository.swift      // protocol
+│   ├── MockUserRepository.swift  // for dev/tests
+│   └── ProductRepository.swift
+└── Storage/
+    ├── LocalStorageManager.swift
+    └── StorageKeys.swift
+</code></pre>
+
+<h3 id="43-the-designsystem-package">4.3 The <code>DesignSystem</code> Package</h3>
+<p><strong>What belongs here:</strong>
+- Brand colors (as <code>Color</code> extensions or a named type)
+- Typography (font names, sizes, a <code>Font</code> factory)
+- Reusable generic UI components: <code>PrimaryButton</code>, <code>AppText</code>, <code>LoadingView</code>
+- View modifiers that apply to any view (e.g., <code>RoundedCard</code>, <code>ShimmerEffect</code>)
+- Image / icon helpers</p>
+<p><strong>What does NOT belong here:</strong>
+- Anything domain-specific (a component that renders a <code>User</code> or <code>Course</code>)
+- Any coordinator / navigation logic
+- Any view model</p>
+<p><strong>The key test:</strong> Can this component be copy-pasted into a completely different app and work? If yes → <code>DesignSystem</code>. If no → it belongs in a feature.</p>
+<pre class="codehilite"><code>DesignSystem/Sources/DesignSystem/
+├── Colors/
+│   └── Color+Extensions.swift     // Color.primaryBlue, etc.
+├── Typography/
+│   ├── FontHelper.swift
+│   └── AppTypography.swift
+├── Components/
+│   ├── PrimaryButton.swift
+│   ├── AppText.swift
+│   └── LoadingSpinner.swift
+├── Modifiers/
+│   └── CardModifier.swift
+└── Extensions/
+    └── View+Extension.swift
+</code></pre>
+
+<p><strong>⚠️ Important — Assets &amp; Fonts:</strong><br />
+Asset catalogs (<code>.xcassets</code>) and font files (<code>.ttf</code>, <code>.otf</code>) registered in the main app's <code>Info.plist</code> stay in the <strong>main app target</strong>. Your <code>DesignSystem</code> package references them by string name:</p>
+<pre class="codehilite"><code class="language-swift">// In DesignSystem package — this works because fonts are in Bundle.main
+public extension Color {
+    static let primaryBlue = Color(&quot;primary-blue&quot;)  // resolves from Bundle.main
+}
+</code></pre>
+
+<p>If you want assets to live fully inside the package, use SPM resources (see section 6.4).</p>
+<h3 id="44-the-appcoordination-package">4.4 The <code>AppCoordination</code> Package</h3>
+<p><strong>What belongs here:</strong>
+- The base <code>Coordinator</code> protocol
+- <code>AppCoordinator</code> — owns the navigation path and global state
+- All route enums (<code>AppRoute</code>, <code>HomeRoute</code>, <code>SettingsRoute</code>, etc.)
+- All concrete coordinator classes (<code>HomeCoordinator</code>, <code>LoginCoordinator</code>, etc.)
+- App-level DI containers (<code>AppDependencies</code>)</p>
+<p><strong>What does NOT belong here:</strong>
+- Feature-specific DI containers that reference a ViewModel (put those in the feature package)
+- Any SwiftUI view
+- Any ViewModel</p>
+<p><strong>Why keep all coordinators together?</strong><br />
+<code>AppCoordinator</code> holds references to all feature coordinators. If <code>HomeCoordinator</code> lived in <code>FeatureHome</code>, you'd need <code>AppCoordination</code> → <code>FeatureHome</code> (to hold <code>HomeCoordinator</code>) AND <code>FeatureHome</code> → <code>AppCoordination</code> (to use <code>AppCoordinator</code>). That's a <strong>cycle</strong>. Keeping all coordinators in <code>AppCoordination</code> breaks it.</p>
+<h3 id="45-feature-packages">4.5 Feature Packages</h3>
+<p>Each feature package contains everything needed to display and interact with one feature:</p>
+<ul>
+<li>The feature's SwiftUI <code>View</code>(s)</li>
+<li>The feature's <code>ViewModel</code>(s) / <code>ObservableObject</code>(s)</li>
+<li>Feature-specific sub-views used only within this feature</li>
+<li>Feature-specific DI container (if it references a ViewModel type)</li>
+</ul>
+<p><strong>Example — <code>FeatureLogin</code>:</strong></p>
+<pre class="codehilite"><code>FeatureLogin/Sources/FeatureLogin/
+├── Presentation/
+│   ├── LoginView.swift
+│   └── LoginViewModel.swift
+└── DI/
+    └── LoginDependencies.swift
+</code></pre>
+
+<p><strong>Naming conventions:</strong>
+- Package name: <code>FeatureLogin</code>, <code>FeatureHome</code>, <code>FeatureCheckout</code>
+- Or: <code>LoginFeature</code>, <code>HomeFeature</code> — pick one style, be consistent.</p>
+<hr />
+<h2 id="5-creating-a-local-spm-package-step-by-step">5. Creating a Local SPM Package — Step by Step</h2>
+<p>There are two ways to create a package: via Xcode UI or via the terminal. Both produce the same result.</p>
+<h3 id="method-a-xcode-ui-easiest">Method A — Xcode UI (easiest)</h3>
+<p><strong>Step 1:</strong> In Xcode, go to <strong>File → New → Package…</strong></p>
+<pre class="codehilite"><code>┌─────────────────────────────────────────────────┐
+│  File   Edit   View   Navigate   Editor   Product │
+│                                                   │
+│  New                          ►  File…    ⌘N      │
+│  Open…                           Project…         │
+│  Open Recent                  ►  Package…  ◄──── │
+│  ...                                              │
+└─────────────────────────────────────────────────┘
+</code></pre>
+
+<p><strong>Step 2:</strong> Name the package (e.g., <code>Core</code>), choose the save location as your <code>Packages/</code> folder inside the project root, and click <strong>Create</strong>.</p>
+<p><strong>Step 3:</strong> Xcode creates this structure automatically:</p>
+<pre class="codehilite"><code>Core/
+├── Package.swift
+├── Sources/
+│   └── Core/
+│       └── Core.swift          ← delete this placeholder
+└── Tests/
+    └── CoreTests/
+        └── CoreTests.swift     ← delete if not needed yet
+</code></pre>
+
+<p><strong>Step 4:</strong> Repeat for every module you need.</p>
+<h3 id="method-b-terminal-faster-for-many-packages">Method B — Terminal (faster for many packages)</h3>
+<pre class="codehilite"><code class="language-bash"># Navigate to your project root
+cd ~/Desktop/MyApp
+
+# Create the Packages directory
+mkdir -p Packages
+
+# Create each package
+for name in Core Domain DesignSystem AppCoordination FeatureLogin FeatureHome; do
+    mkdir -p &quot;Packages/$name/Sources/$name&quot;
+    cat &gt; &quot;Packages/$name/Package.swift&quot; &lt;&lt; EOF
+// swift-tools-version: 5.9
+import PackageDescription
+
+let package = Package(
+    name: &quot;$name&quot;,
+    platforms: [.iOS(.v17)],
+    products: [
+        .library(name: &quot;$name&quot;, targets: [&quot;$name&quot;]),
+    ],
+    targets: [
+        .target(name: &quot;$name&quot;),
+    ]
+)
+EOF
+done
+</code></pre>
+
+<p>After running this, add dependencies between packages (see section 6).</p>
+<hr />
+<h2 id="6-writing-packageswift-full-reference">6. Writing Package.swift — Full Reference</h2>
+<p><code>Package.swift</code> is the manifest file that tells SPM everything about your package. Here is every field explained.</p>
+<h3 id="61-minimal-packageswift">6.1 Minimal Package.swift</h3>
+<pre class="codehilite"><code class="language-swift">// swift-tools-version: 5.9          ← minimum Swift version needed to parse this file
+import PackageDescription
+
+let package = Package(
+    name: &quot;Core&quot;,                     ← the package name (used by Xcode)
+    platforms: [.iOS(.v17)],          ← minimum platform version
+    products: [
+        // What other packages/targets can import from this package
+        .library(name: &quot;Core&quot;, targets: [&quot;Core&quot;]),
+    ],
+    targets: [
+        // The actual compilation unit
+        .target(name: &quot;Core&quot;),        ← sources default to Sources/Core/
+    ]
+)
+</code></pre>
+
+<h3 id="62-package-with-dependencies">6.2 Package with Dependencies</h3>
+<pre class="codehilite"><code class="language-swift">// swift-tools-version: 5.9
+import PackageDescription
+
+let package = Package(
+    name: &quot;Domain&quot;,
+    platforms: [.iOS(.v17)],
+    products: [
+        .library(name: &quot;Domain&quot;, targets: [&quot;Domain&quot;]),
+    ],
+    dependencies: [
+        // Local package — path is relative to THIS Package.swift
+        .package(path: &quot;../Core&quot;),
+
+        // Remote package — fetched from GitHub
+        // .package(url: &quot;https://github.com/apple/swift-algorithms&quot;, from: &quot;1.0.0&quot;),
+    ],
+    targets: [
+        .target(
+            name: &quot;Domain&quot;,
+            dependencies: [
+                // Must match a product name from the dependency above
+                &quot;Core&quot;,
+            ]
+        ),
+    ]
+)
+</code></pre>
+
+<h3 id="63-package-with-multiple-products-targets">6.3 Package with Multiple Products / Targets</h3>
+<p>A single <code>Package.swift</code> can define multiple libraries. This is useful when you want to give consumers fine-grained control over what they import:</p>
+<pre class="codehilite"><code class="language-swift">let package = Package(
+    name: &quot;Networking&quot;,
+    products: [
+        .library(name: &quot;Networking&quot;,    targets: [&quot;Networking&quot;]),
+        .library(name: &quot;NetworkingMocks&quot;, targets: [&quot;NetworkingMocks&quot;]),
+    ],
+    targets: [
+        .target(name: &quot;Networking&quot;),
+        .target(name: &quot;NetworkingMocks&quot;, dependencies: [&quot;Networking&quot;]),
+        .testTarget(name: &quot;NetworkingTests&quot;, dependencies: [&quot;Networking&quot;, &quot;NetworkingMocks&quot;]),
+    ]
+)
+</code></pre>
+
+<h3 id="64-package-with-resources-assets-fonts-json">6.4 Package with Resources (Assets, Fonts, JSON)</h3>
+<p>If you want fonts or asset catalogs to live inside a package (not the main app target), declare them as resources:</p>
+<pre class="codehilite"><code class="language-swift">.target(
+    name: &quot;DesignSystem&quot;,
+    resources: [
+        // .process copies and processes the resource (e.g., compiles asset catalogs)
+        .process(&quot;Resources/Assets.xcassets&quot;),
+        // .copy copies files as-is
+        .copy(&quot;Resources/Fonts&quot;),
+    ]
+)
+</code></pre>
+
+<p>Then inside the package code, access them via <code>Bundle.module</code>:</p>
+<pre class="codehilite"><code class="language-swift">// Inside DesignSystem package
+extension Color {
+    static let primaryBlue = Color(&quot;primary-blue&quot;, bundle: .module)
+}
+
+extension Font {
+    static func myFont(size: CGFloat) -&gt; Font {
+        .custom(&quot;MyFont-Bold&quot;, size: size, relativeTo: .body)
+    }
+}
+</code></pre>
+
+<p>And register fonts in code (not Info.plist) if they live in a package:</p>
+<pre class="codehilite"><code class="language-swift">// Call this once at app startup
+CTFontManagerRegisterFontsWithURL(fontURL, .process, nil)
+</code></pre>
+
+<h3 id="65-package-with-a-test-target">6.5 Package with a Test Target</h3>
+<pre class="codehilite"><code class="language-swift">targets: [
+    .target(name: &quot;Domain&quot;),
+    .testTarget(
+        name: &quot;DomainTests&quot;,
+        dependencies: [&quot;Domain&quot;]    // test target depends on the target it tests
+    ),
+]
+</code></pre>
+
+<p>Run tests for just this package from the terminal:</p>
+<pre class="codehilite"><code class="language-bash">swift test --package-path Packages/Domain
+</code></pre>
+
+<h3 id="66-swift-version-settings">6.6 Swift Version Settings</h3>
+<pre class="codehilite"><code class="language-swift">let package = Package(
+    name: &quot;Core&quot;,
+    platforms: [.iOS(.v17)],
+    // Optionally pin to a specific Swift version:
+    swiftLanguageVersions: [.v5],
+    ...
+)
+</code></pre>
+
+<h3 id="67-complete-template-copy-this">6.7 Complete Template — Copy This</h3>
+<pre class="codehilite"><code class="language-swift">// swift-tools-version: 5.9
+import PackageDescription
+
+let package = Package(
+    name: &quot;PACKAGE_NAME&quot;,
+    platforms: [.iOS(.v17)],
+    products: [
+        .library(name: &quot;PACKAGE_NAME&quot;, targets: [&quot;PACKAGE_NAME&quot;]),
+    ],
+    dependencies: [
+        // Add local package dependencies here:
+        // .package(path: &quot;../Core&quot;),
+        // .package(path: &quot;../Domain&quot;),
+        // .package(path: &quot;../DesignSystem&quot;),
+    ],
+    targets: [
+        .target(
+            name: &quot;PACKAGE_NAME&quot;,
+            dependencies: [
+                // List product names from the packages above:
+                // &quot;Core&quot;,
+                // &quot;Domain&quot;,
+            ],
+            // Optional: add resources
+            // resources: [.process(&quot;Resources&quot;)]
+        ),
+        // Optional: add tests
+        // .testTarget(
+        //     name: &quot;PACKAGE_NAMETests&quot;,
+        //     dependencies: [&quot;PACKAGE_NAME&quot;]
+        // ),
+    ]
+)
+</code></pre>
+
+<hr />
+<h2 id="7-access-control-the-most-important-rule">7. Access Control — The Most Important Rule</h2>
+<p>In a modular app, <strong>access control is your contract</strong>. If you get it wrong, modules won't be able to use each other's types.</p>
+<h3 id="71-swift-access-levels-quickref">7.1 Swift Access Levels (quickref)</h3>
+<table>
+<thead>
+<tr>
+<th>Keyword</th>
+<th>Visible to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>private</code></td>
+<td>Within the same declaration</td>
+</tr>
+<tr>
+<td><code>fileprivate</code></td>
+<td>Within the same file</td>
+</tr>
+<tr>
+<td><code>internal</code></td>
+<td>Within the same <strong>module</strong> (default)</td>
+</tr>
+<tr>
+<td><code>public</code></td>
+<td>Any module that imports this one</td>
+</tr>
+<tr>
+<td><code>open</code></td>
+<td>Any module (also allows subclassing/overriding)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The key rule:</strong> Anything that crosses a module boundary MUST be <code>public</code>. Everything else should be <code>internal</code> (the default — you don't write it).</p>
+<h3 id="72-what-must-be-public">7.2 What Must Be <code>public</code></h3>
+<table>
+<thead>
+<tr>
+<th>Thing</th>
+<th>Must be public?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Struct/class/enum used by another module</td>
+<td>✅ Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Init of a struct</td>
+<td>✅ Yes</td>
+<td>Swift gives structs a default memberwise init but it is <strong>internal</strong>. You must explicitly write a <code>public init</code></td>
+</tr>
+<tr>
+<td>Properties read by another module</td>
+<td>✅ Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Methods called by another module</td>
+<td>✅ Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Protocol used by another module</td>
+<td>✅ Yes</td>
+<td></td>
+</tr>
+<tr>
+<td><code>static let</code> constants used elsewhere</td>
+<td>✅ Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Private helpers inside a class</td>
+<td>❌ No</td>
+<td>Keep them <code>private</code></td>
+</tr>
+<tr>
+<td>Internal state of a view model</td>
+<td>❌ No</td>
+<td>Keep <code>internal</code> or <code>private</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="73-the-memberwise-init-problem">7.3 The Memberwise Init Problem</h3>
+<p>This is the #1 gotcha when moving structs to packages:</p>
+<pre class="codehilite"><code class="language-swift">// Before (monolith) — memberwise init is fine, everything is internal
+struct User {
+    let id: UUID
+    let name: String
+}
+// Elsewhere in the same target:
+let user = User(id: UUID(), name: &quot;Alice&quot;)  // works ✅
+</code></pre>
+
+<pre class="codehilite"><code class="language-swift">// After (in Domain package) — memberwise init is INTERNAL, not visible
+public struct User {
+    public let id: UUID
+    public let name: String
+    // No explicit public init → external callers CANNOT create a User!
+}
+
+// In FeatureLogin package:
+let user = User(id: UUID(), name: &quot;Alice&quot;)  // ❌ 'User' initializer is inaccessible
+</code></pre>
+
+<p><strong>Fix:</strong> Always write an explicit <code>public init</code> for every <code>public struct</code>:</p>
+<pre class="codehilite"><code class="language-swift">public struct User {
+    public let id: UUID
+    public let name: String
+
+    public init(id: UUID, name: String) {  // ← explicit public init
+        self.id   = id
+        self.name = name
+    }
+}
+</code></pre>
+
+<h3 id="74-observable-classes">7.4 <code>@Observable</code> Classes</h3>
+<p>When using the <code>@Observable</code> macro, the class itself AND the <code>init</code> must be <code>public</code>:</p>
+<pre class="codehilite"><code class="language-swift">// AppCoordination package
+@Observable
+public final class AppCoordinator {
+    public var path = NavigationPath()
+    public var isLoggedIn: Bool = false
+
+    public init() {}   // ← must be explicitly public
+}
+</code></pre>
+
+<h3 id="75-protocol-conformance">7.5 Protocol Conformance</h3>
+<p>Both the protocol AND the conforming type must handle access:</p>
+<pre class="codehilite"><code class="language-swift">// Domain package
+public protocol CourseRepository {
+    func fetchActiveCourse() async throws -&gt; Course
+}
+
+public struct MockCourseRepository: CourseRepository {
+    public init() {}  // ← don't forget this
+
+    public func fetchActiveCourse() async throws -&gt; Course {
+        return Course.mockCourse
+    }
+}
+</code></pre>
+
+<h3 id="76-quick-checklist-for-access-control">7.6 Quick Checklist for Access Control</h3>
+<p>When moving a file to a package, go through each declaration and ask:</p>
+<pre class="codehilite"><code>Is this type/property/method used from OUTSIDE this package?
+├── YES → mark it public (+ write public init for structs)
+└── NO  → leave it internal (default) or private
+</code></pre>
+
+<hr />
+<h2 id="8-adding-local-packages-to-your-xcode-project">8. Adding Local Packages to Your Xcode Project</h2>
+<p>After creating your packages, you must link them to the Xcode project. There are two approaches.</p>
+<h3 id="method-a-xcode-ui-recommended-for-beginners">Method A — Xcode UI (recommended for beginners)</h3>
+<p><strong>Step 1:</strong> Open your <code>.xcodeproj</code> in Xcode.</p>
+<p><strong>Step 2:</strong> Select your project in the <strong>Project Navigator</strong> (the top item, with the Xcode icon).</p>
+<p><strong>Step 3:</strong> In the main editor area, select your <strong>app target</strong> (e.g., <code>MyApp</code>) under "Targets".</p>
+<p><strong>Step 4:</strong> Go to the <strong>"General"</strong> tab.</p>
+<p><strong>Step 5:</strong> Scroll down to <strong>"Frameworks, Libraries, and Embedded Content"</strong>.</p>
+<pre class="codehilite"><code>┌────────────────────────────────────────────────┐
+│  PROJECT          TARGETS                       │
+│  MyApp            MyApp      ◄── selected      │
+│  MyAppTests       MyAppTests                   │
+│                                                 │
+│  General  Signing &amp; Capabilities  Build Phases  │
+│                                                 │
+│  ...                                            │
+│                                                 │
+│  Frameworks, Libraries, and Embedded Content    │
+│  ┌──────────────────────────────────────────┐  │
+│  │  (empty)                                 │  │
+│  └──────────────────────────────────────────┘  │
+│  [+]  [-]                                       │
+└────────────────────────────────────────────────┘
+</code></pre>
+
+<p><strong>Step 6:</strong> Click the <strong><code>+</code></strong> button at the bottom left of that section.</p>
+<p><strong>Step 7:</strong> In the sheet that appears, click <strong>"Add Other…"</strong> at the bottom, then <strong>"Add Package Dependency…"</strong>.</p>
+<pre class="codehilite"><code>┌────────────────────────────────────────┐
+│  Choose frameworks and libraries       │
+│  to add                                │
+│                                        │
+│  [Search...]                           │
+│                                        │
+│  ┌──────────────────────────────────┐  │
+│  │  No results                      │  │
+│  └──────────────────────────────────┘  │
+│                                        │
+│  [Add Other ▼]         [Cancel] [Add]  │
+│   └─ Add Package Dependency... ◄────   │
+└────────────────────────────────────────┘
+</code></pre>
+
+<p><strong>Step 8:</strong> In the search bar, click <strong>"Add Local…"</strong> button (bottom left of the sheet):</p>
+<pre class="codehilite"><code>┌────────────────────────────────────────────────────────┐
+│  Search or enter package URL                           │
+│  ┌──────────────────────────────────────────────────┐ │
+│  │  https://...                                      │ │
+│  └──────────────────────────────────────────────────┘ │
+│                                                        │
+│  Recent Packages:                                      │
+│  (none)                                                │
+│                                                        │
+│  [Add Local...]  ◄─── click this          [Cancel]    │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+
+<p><strong>Step 9:</strong> Navigate to <code>Packages/Core</code> (or whichever package you're adding) and click <strong>"Add Package"</strong>.</p>
+<p><strong>Step 10:</strong> Xcode shows a confirmation. Make sure the correct product is checked and the correct target is selected:</p>
+<pre class="codehilite"><code>┌────────────────────────────────────────────────────────┐
+│  Choose Package Products and Targets                   │
+│                                                        │
+│  Package: Core                                         │
+│                                                        │
+│  Product         Target                                │
+│  ☑ Core    →     MyApp      ◄─── check this           │
+│                                                        │
+│                            [Cancel]  [Add Package]     │
+└────────────────────────────────────────────────────────┘
+</code></pre>
+
+<p><strong>Step 11:</strong> Click <strong>"Add Package"</strong>. Repeat for every package.</p>
+<p><strong>Step 12:</strong> For the <strong>test target</strong>, go back to the <code>+</code> button but this time with your test target selected. Add <code>Domain</code> and any feature package your tests need.</p>
+<h3 id="method-b-direct-projectpbxproj-edit-advanced-scriptable">Method B — Direct <code>project.pbxproj</code> Edit (advanced, scriptable)</h3>
+<p>The <code>project.pbxproj</code> file inside <code>MyApp.xcodeproj/</code> is a plain text file (despite the <code>.pbxproj</code> extension). You can edit it programmatically using a Python/Ruby script. This is useful when you have many packages and don't want to click through the UI dozens of times.</p>
+<p>You need to add four things to the pbxproj:</p>
+<ol>
+<li><strong><code>XCLocalSwiftPackageReference</code></strong> — registers the local package path</li>
+<li><strong><code>XCSwiftPackageProductDependency</code></strong> — declares the product you want to link</li>
+<li><strong><code>PBXBuildFile</code></strong> — creates a build file entry that connects the product to a build phase</li>
+<li><strong><code>PBXFrameworksBuildPhase.files</code></strong> — lists the build file in the link phase</li>
+<li><strong><code>PBXNativeTarget.packageProductDependencies</code></strong> — lists products the target depends on</li>
+<li><strong><code>PBXProject.packageReferences</code></strong> — lists all local package references</li>
+</ol>
+<p>A template Python script for this is in <a href="#134-automated-pbxproj-script">section 13.4</a>.</p>
+<h3 id="method-c-packageswift-at-the-workspace-level-mono-repo">Method C — Package.swift at the Workspace Level (mono-repo)</h3>
+<p>For very large projects, you can use a top-level <code>Package.swift</code> that declares all local packages, then open everything as an Xcode workspace. This is what many large teams do. It's outside the scope of this guide but worth knowing about.</p>
+<hr />
+<h2 id="9-migrating-existing-code-file-by-file">9. Migrating Existing Code — File by File</h2>
+<p>This is the practical part. Here's the exact process for moving a file from your monolith to a package.</p>
+<h3 id="91-the-migration-order">9.1 The Migration Order</h3>
+<p>Always migrate bottom-up — start with the packages that have no dependencies:</p>
+<pre class="codehilite"><code>Step 1: Core         (no deps)
+Step 2: Domain       (depends on Core)
+Step 3: DesignSystem (depends on Core)
+Step 4: AppCoordination (depends on Domain + DesignSystem)
+Step 5: Feature packages (depend on AppCoordination + Domain + DesignSystem)
+Step 6: Clean up the main app target
+</code></pre>
+
+<p>Never try to migrate everything at once. Do one package, build, fix errors, commit, then move on.</p>
+<h3 id="92-moving-a-file-step-by-step">9.2 Moving a File — Step by Step</h3>
+<p>Let's say you're moving <code>User.swift</code> from <code>MyApp/Entities/User.swift</code> to the <code>Domain</code> package.</p>
+<p><strong>Step 1: Copy (don't move yet) the file into the package:</strong></p>
+<pre class="codehilite"><code class="language-bash">cp MyApp/Entities/User.swift Packages/Domain/Sources/Domain/Entities/User.swift
+</code></pre>
+
+<p><strong>Step 2: Add <code>public</code> to every declaration that crosses the module boundary:</strong></p>
+<p>Before (monolith):</p>
+<pre class="codehilite"><code class="language-swift">struct User: Codable, Identifiable {
+    let id: UUID
+    var firstName: String
+    var lastName: String
+}
+</code></pre>
+
+<p>After (in Domain package):</p>
+<pre class="codehilite"><code class="language-swift">public struct User: Codable, Identifiable {
+    public let id: UUID
+    public var firstName: String
+    public var lastName: String
+
+    public init(id: UUID, firstName: String, lastName: String) {
+        self.id        = id
+        self.firstName = firstName
+        self.lastName  = lastName
+    }
+}
+</code></pre>
+
+<p><strong>Step 3: Add necessary <code>import</code> statements to the package file:</strong></p>
+<p>If <code>User.swift</code> used <code>String+Extension.swift</code> from <code>Core</code>, add:</p>
+<pre class="codehilite"><code class="language-swift">import Core
+</code></pre>
+
+<p><strong>Step 4: Build just the package to check for errors:</strong></p>
+<pre class="codehilite"><code class="language-bash">swift build --package-path Packages/Domain
+</code></pre>
+
+<p><strong>Step 5: Once the package builds cleanly, add <code>import Domain</code> to every file in the monolith that uses <code>User</code>:</strong></p>
+<pre class="codehilite"><code class="language-swift">// In GreyLearn/Features/Login/Presentation/LoginViewModel.swift
+import Domain  // ← add this
+</code></pre>
+
+<p><strong>Step 6: Remove <code>User.swift</code> from the main app target</strong> (either delete from disk or uncheck "Target Membership" in Xcode's File Inspector panel on the right).</p>
+<p><strong>Step 7: Build the full project:</strong></p>
+<pre class="codehilite"><code class="language-bash">xcodebuild -scheme MyApp -destination 'generic/platform=iOS Simulator' build
+</code></pre>
+
+<p><strong>Step 8: Fix any remaining errors, then commit.</strong></p>
+<h3 id="93-common-error-patterns-and-fixes">9.3 Common Error Patterns and Fixes</h3>
+<p><strong>Error: <code>'SomeType' is not a member of 'ModuleName'</code></strong><br />
+→ You forgot to mark the type <code>public</code>. Add <code>public</code> to the struct/class/enum declaration.</p>
+<p><strong>Error: <code>'SomeType' initializer is inaccessible due to 'internal' protection level</code></strong><br />
+→ The struct has a <code>public</code> declaration but its init is still internal. Add an explicit <code>public init(...)</code>.</p>
+<p><strong>Error: <code>'SomeType' is ambiguous for type lookup in this context</code></strong><br />
+→ Two modules define a type with the same name. Qualify it: <code>Domain.Section</code>, <code>SwiftUI.Section</code>.</p>
+<p><strong>Error: <code>Cannot find type 'SomeType' in scope</code></strong><br />
+→ You forgot to <code>import ModuleName</code> at the top of the file.</p>
+<p><strong>Error: <code>Circular dependency between targets</code></strong><br />
+→ Your dependency graph has a cycle. Redesign the graph (see section 10.1).</p>
+<p><strong>Error: <code>Module 'X' was not compiled for testing</code></strong><br />
+→ Your test target imports a package but that package isn't linked to the test target. Add it in Xcode's General → Frameworks section for the test target.</p>
+<hr />
+<h2 id="10-handling-common-pitfalls">10. Handling Common Pitfalls</h2>
+<h3 id="101-breaking-circular-dependencies">10.1 Breaking Circular Dependencies</h3>
+<p>A circular dependency is when package A depends on package B AND package B depends on package A:</p>
+<pre class="codehilite"><code>FeatureLogin ──imports──► AppCoordination
+AppCoordination ──imports──► FeatureLogin   ← CYCLE! Won't compile.
+</code></pre>
+
+<p><strong>How to detect it:</strong><br />
+When you add a package dependency and get a "dependency cycle" error from SPM, or when you notice that to make package A compile you need a type from package B which itself needs A.</p>
+<p><strong>How to break it — 3 strategies:</strong></p>
+<p><strong>Strategy 1: Extract the shared type to a lower layer</strong></p>
+<p>If both A and B need type <code>T</code>, move <code>T</code> to a package that both A and B can depend on without depending on each other.</p>
+<pre class="codehilite"><code>Before:                     After:
+A ↔ B (cycle)               A → Shared ← B
+                            (no cycle)
+</code></pre>
+
+<p><strong>Strategy 2: Use a protocol / closure instead of a concrete type</strong></p>
+<p>Instead of having <code>DesignSystem</code> import <code>AppCoordination</code> to call <code>coordinator.pop()</code>, pass a closure:</p>
+<pre class="codehilite"><code class="language-swift">// Before — causes DesignSystem to import AppCoordination (cycle risk):
+struct BackButton: View {
+    @Environment(AppCoordinator.self) private var coordinator
+    var body: some View {
+        Button(&quot;Back&quot;) { coordinator.pop() }
+    }
+}
+
+// After — no import needed:
+struct BackButton: View {
+    let onTap: () -&gt; Void
+    var body: some View {
+        Button(&quot;Back&quot;) { onTap() }
+    }
+}
+// At the call site in a feature:
+BackButton(onTap: { coordinator.pop() })
+</code></pre>
+
+<p><strong>Strategy 3: Invert the dependency with a protocol</strong></p>
+<pre class="codehilite"><code class="language-swift">// AppCoordination package — defines the protocol
+public protocol NavigationController {
+    func push(_ route: AnyRoute)
+    func pop()
+}
+
+// FeatureLogin — conforms to the protocol (doesn't import AppCoordination's concrete type)
+// AppCoordinator — also conforms to the protocol
+</code></pre>
+
+<h3 id="102-the-navigationdestination-must-be-inside-navigationstack">10.2 The <code>navigationDestination</code> Must Be Inside <code>NavigationStack</code></h3>
+<p>A very common SwiftUI bug in modular apps: when <code>NavigationStack</code> lives in the app target and destination views live in feature packages, you might be tempted to attach <code>navigationDestination</code> outside the stack. This won't work.</p>
+<pre class="codehilite"><code class="language-swift">// ❌ WRONG — navigationDestination outside NavigationStack
+NavigationStack(path: $path) {
+    ContentView()
+}
+.navigationDestination(for: MyRoute.self) { route in  // ← this doesn't work
+    RouteView(route: route)
+}
+
+// ✅ CORRECT — navigationDestination inside the stack's content
+NavigationStack(path: $path) {
+    ContentView()
+        .navigationDestination(for: MyRoute.self) { route in  // ← attached to a view inside
+            RouteView(route: route)
+        }
+}
+</code></pre>
+
+<h3 id="103-file-system-synchronized-groups-xcode-16">10.3 File System Synchronized Groups (Xcode 16+)</h3>
+<p>Xcode 16 introduced "File System Synchronized Groups" — when your target uses this, ALL files in the target's folder are automatically compiled. If you've moved a file to a package but the original file still exists in the main app folder, you'll get duplicate symbol errors.</p>
+<p><strong>How to detect:</strong> In Xcode, if the folder icon in the Navigator looks like this — a folder with a diamond-shaped symbol — it's using file system sync.</p>
+<p><strong>Solutions:</strong>
+1. <strong>Delete the original file from disk</strong> after copying it to the package. (Recommended.)
+2. <strong>Add the file as an exception</strong> in the File System Synchronized Group settings.
+3. <strong>Disable file system sync</strong> for the target and manage files manually.</p>
+<h3 id="104-observable-vs-observableobject-in-packages">10.4 <code>@Observable</code> vs <code>ObservableObject</code> in Packages</h3>
+<p>Both work in packages, but have different requirements:</p>
+<p><strong><code>ObservableObject</code> (Combine-based):</strong></p>
+<pre class="codehilite"><code class="language-swift">// Works in packages — no special considerations
+public final class MyViewModel: ObservableObject {
+    @Published public var value: String = &quot;&quot;
+    public init() {}
+}
+</code></pre>
+
+<p><strong><code>@Observable</code> macro (Swift 5.9+):</strong></p>
+<pre class="codehilite"><code class="language-swift">// Works in packages — mark the class AND init as public
+@Observable
+public final class AppCoordinator {
+    public var path = NavigationPath()
+    public init() {}
+}
+</code></pre>
+
+<p><strong>⚠️ Combine <code>.assign(to: &amp;$publishedProperty)</code> in packages:</strong><br />
+The <code>assign(to: inout Published&lt;T&gt;.Publisher)</code> overload can cause parse errors in some SPM module contexts. Use <code>.sink { [weak self] in self?.property = $0 }.store(in: &amp;cancellables)</code> instead — it's identical in behavior and works everywhere.</p>
+<h3 id="105-swift-regex-literals-in-packages">10.5 Swift Regex Literals in Packages</h3>
+<p>Swift regex literals (<code>/pattern/</code>) require the package toolchain to enable them explicitly in some configurations. If you get parse errors on regex literals inside a package, replace them with <code>NSRegularExpression</code>:</p>
+<pre class="codehilite"><code class="language-swift">// ❌ May fail in some SPM configurations:
+let regex = /^[A-Z0-9]+$/
+
+// ✅ Works everywhere:
+let regex = try? NSRegularExpression(pattern: #&quot;^[A-Z0-9]+$&quot;#)
+</code></pre>
+
+<h3 id="106-resources-in-test-targets">10.6 Resources in Test Targets</h3>
+<p>If your test needs a JSON file, image, or other resource, add it to the test target in Package.swift:</p>
+<pre class="codehilite"><code class="language-swift">.testTarget(
+    name: &quot;DomainTests&quot;,
+    dependencies: [&quot;Domain&quot;],
+    resources: [.copy(&quot;TestData&quot;)]  // copies TestData/ folder into the test bundle
+)
+</code></pre>
+
+<p>Access it in tests:</p>
+<pre class="codehilite"><code class="language-swift">let url = Bundle.module.url(forResource: &quot;sample&quot;, withExtension: &quot;json&quot;)!
+</code></pre>
+
+<hr />
+<h2 id="11-testing-in-a-modular-architecture">11. Testing in a Modular Architecture</h2>
+<p>Modular architecture makes testing dramatically better because you can test a module's logic without the entire app.</p>
+<h3 id="111-three-kinds-of-tests">11.1 Three Kinds of Tests</h3>
+<p><strong>Package-level unit tests</strong> — fastest, most isolated:</p>
+<pre class="codehilite"><code class="language-swift">// In Domain package's test target
+import XCTest
+import Domain
+
+final class CourseTests: XCTestCase {
+    func testStageProgress() {
+        let stage = Course.mockCourse.stage
+        XCTAssertEqual(stage.text, &quot;Stage 3 of 11&quot;)
+    }
+}
+</code></pre>
+
+<p>Run: <code>swift test --package-path Packages/Domain</code></p>
+<p><strong>App-level integration tests</strong> — tests that link multiple packages:</p>
+<pre class="codehilite"><code class="language-swift">// In GreyLearnTests target
+import XCTest
+import Domain
+import FeatureHome  // ← import the packages you need
+
+final class HomeViewModelTests: XCTestCase {
+    func testStreakIncrement() {
+        let vm = HomeViewModel(dependencies: .init(
+            courseRepository: MockCourseRepository(),
+            localRepository: LocalRepository()
+        ))
+        vm.recordActivity()
+        XCTAssertEqual(vm.streak, &quot;🔥 1 day&quot;)
+    }
+}
+</code></pre>
+
+<p><strong>UI tests</strong> — slowest, test the full running app (no module-level imports needed).</p>
+<h3 id="112-the-protocol-based-stub-pattern">11.2 The Protocol-Based Stub Pattern</h3>
+<p>Because your repositories are protocols in <code>Domain</code>, writing stubs is trivial:</p>
+<pre class="codehilite"><code class="language-swift">// In your test file — no extra mocking library needed
+private struct StubCourseRepository: CourseRepository {
+    let course: Course
+    func fetchActiveCourse() async throws -&gt; Course { course }
+}
+
+private struct FailingCourseRepository: CourseRepository {
+    func fetchActiveCourse() async throws -&gt; Course {
+        throw URLError(.notConnectedToInternet)
+    }
+}
+</code></pre>
+
+<h3 id="113-isolated-storage-for-tests">11.3 Isolated Storage for Tests</h3>
+<p>Never let tests touch real <code>UserDefaults.standard</code>. Use a named suite per test:</p>
+<pre class="codehilite"><code class="language-swift">override func setUp() {
+    super.setUp()
+    let suiteName = UUID().uuidString  // unique per test run
+    let defaults  = UserDefaults(suiteName: suiteName)!
+    storage       = LocalStorageManager(defaults: defaults)
+}
+
+override func tearDown() {
+    defaults.removePersistentDomain(forName: suiteName)
+    super.tearDown()
+}
+</code></pre>
+
+<h3 id="114-adding-a-test-target-to-a-package">11.4 Adding a Test Target to a Package</h3>
+<p>Modify the package's <code>Package.swift</code>:</p>
+<pre class="codehilite"><code class="language-swift">targets: [
+    .target(name: &quot;Domain&quot;),
+    .testTarget(
+        name: &quot;DomainTests&quot;,
+        dependencies: [&quot;Domain&quot;]
+    ),
+]
+</code></pre>
+
+<p>Create the test directory:</p>
+<pre class="codehilite"><code class="language-bash">mkdir -p Packages/Domain/Tests/DomainTests
+touch Packages/Domain/Tests/DomainTests/DomainTests.swift
+</code></pre>
+
+<p>Run:</p>
+<pre class="codehilite"><code class="language-bash">swift test --package-path Packages/Domain
+</code></pre>
+
+<p>Or in Xcode: <code>⌘U</code> with the package's scheme selected.</p>
+<hr />
+<h2 id="12-the-composition-root-pattern">12. The Composition Root Pattern</h2>
+<p>The <strong>composition root</strong> is the single place in your app where everything is wired together. In an iOS modular app, this is almost always the <code>@main</code> App struct.</p>
+<h3 id="121-what-the-composition-root-does">12.1 What the Composition Root Does</h3>
+<ol>
+<li>Creates the root coordinator / state container</li>
+<li>Creates all feature coordinators, injecting dependencies</li>
+<li>Owns the top-level <code>NavigationStack</code></li>
+<li>Decides which feature view to show (logged in vs. logged out, for example)</li>
+<li>Is the ONLY file that imports all feature packages simultaneously</li>
+</ol>
+<h3 id="122-example-composition-root">12.2 Example Composition Root</h3>
+<pre class="codehilite"><code class="language-swift">import SwiftUI
+import AppCoordination   // coordinators
+import FeatureLaunch     // LaunchScreenView
+import FeatureLogin      // LoginView
+import FeatureHome       // HomeView
+// + any other feature packages your root view needs
+
+@main
+struct MyApp: App {
+    // ── State ─────────────────────────────────────────────────────────
+    @State private var appCoordinator: AppCoordinator
+    @State private var loginCoordinator: LoginCoordinator
+    @State private var homeCoordinator: HomeCoordinator
+    @State private var isLaunching = true
+
+    // ── Init — wires everything together ─────────────────────────────
+    init() {
+        let app = AppCoordinator()
+        _appCoordinator   = State(wrappedValue: app)
+        _loginCoordinator = State(wrappedValue: LoginCoordinator(appCoordinator: app))
+        _homeCoordinator  = State(wrappedValue: HomeCoordinator(appCoordinator: app))
+    }
+
+    // ── Root view ────────────────────────────────────────────────────
+    var body: some Scene {
+        WindowGroup {
+            ZStack {
+                NavigationStack(path: $appCoordinator.path) {
+                    rootContent
+                        // navigationDestination MUST be inside NavigationStack content
+                        .navigationDestination(for: AppRoute.self) { route in
+                            AppRouteView(route: route)
+                                .environment(appCoordinator)
+                        }
+                }
+
+                if isLaunching {
+                    LaunchScreenView()
+                        .transition(.opacity)
+                        .zIndex(1)
+                }
+            }
+            .onAppear { scheduleLaunchDismiss() }
+        }
+    }
+
+    @ViewBuilder
+    private var rootContent: some View {
+        if appCoordinator.isLoggedIn, let user = appCoordinator.currentUser {
+            HomeView(user: user)
+                .environment(homeCoordinator)
+                .environment(appCoordinator)
+        } else {
+            LoginView()
+                .environment(loginCoordinator)
+        }
+    }
+
+    private func scheduleLaunchDismiss() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            withAnimation(.easeOut(duration: 0.5)) { isLaunching = false }
+        }
+    }
+}
+</code></pre>
+
+<h3 id="123-the-route-view-mapping-file">12.3 The Route → View Mapping File</h3>
+<p><code>AppRouteView.swift</code> is a second "composition" file that maps route enum cases to concrete feature views. It MUST stay in the main app target (not in any package) because it imports all feature packages:</p>
+<pre class="codehilite"><code class="language-swift">import SwiftUI
+import AppCoordination
+import FeatureChat      // ChatView
+import FeaturePath      // PathView
+import FeatureProfile   // ProfileView
+
+struct AppRouteView: View {
+    @Environment(AppCoordinator.self) private var appCoordinator
+    let route: AppRoute
+
+    var body: some View {
+        switch route {
+        case .profile:
+            if let user = appCoordinator.currentUser {
+                ProfileView(user: user, onLogout: { appCoordinator.logout() })
+                    .environment(ProfileCoordinator(appCoordinator: appCoordinator))
+            }
+
+        case .path(let course):
+            PathView(course: course)
+                .environment(PathCoordinator(appCoordinator: appCoordinator))
+
+        case .chat:
+            ChatView()
+                .environment(ChatCoordinator(appCoordinator: appCoordinator))
+        }
+    }
+}
+</code></pre>
+
+<hr />
+<h2 id="13-a-complete-real-world-example">13. A Complete Real-World Example</h2>
+<p>This section walks through modularizing a fictional "ShopApp" from scratch.</p>
+<h3 id="131-starting-point">13.1 Starting Point</h3>
+<p>ShopApp is a monolith with these files:</p>
+<pre class="codehilite"><code>ShopApp/
+├── Models/
+│   ├── Product.swift
+│   └── CartItem.swift
+├── Repositories/
+│   ├── ProductRepository.swift
+│   └── CartRepository.swift
+├── Navigation/
+│   ├── AppRoute.swift
+│   └── AppCoordinator.swift
+├── Features/
+│   ├── Home/
+│   │   ├── HomeView.swift
+│   │   └── HomeViewModel.swift
+│   ├── ProductDetail/
+│   │   ├── ProductDetailView.swift
+│   │   └── ProductDetailViewModel.swift
+│   └── Cart/
+│       ├── CartView.swift
+│       └── CartViewModel.swift
+├── DesignSystem/
+│   ├── AppButton.swift
+│   └── AppColors.swift
+└── Utilities/
+    └── String+Ext.swift
+</code></pre>
+
+<h3 id="132-step-1-design-the-graph">13.2 Step 1 — Design the Graph</h3>
+<pre class="codehilite"><code>       ShopApp (app target)
+            │
+    ┌───────┼───────┐
+    ▼       ▼       ▼
+ FeatureHome  FeatureProductDetail  FeatureCart
+    │              │                     │
+    └──────────────┼─────────────────────┘
+                   ▼
+            AppCoordination
+           /               \
+          ▼                 ▼
+       Domain           DesignSystem
+          \                 /
+           ▼               ▼
+               Core
+</code></pre>
+
+<h3 id="133-step-2-create-the-package-structure">13.3 Step 2 — Create the Package Structure</h3>
+<pre class="codehilite"><code class="language-bash">cd ~/Desktop/ShopApp
+
+mkdir -p Packages/{Core,Domain,DesignSystem,AppCoordination,FeatureHome,FeatureProductDetail,FeatureCart}/Sources
+
+# Create Package.swift for each — see section 6 for templates
+</code></pre>
+
+<h3 id="134-automated-pbxproj-script">13.4 Automated pbxproj Script</h3>
+<p>Here is a Python script template you can adapt to inject local packages into your <code>project.pbxproj</code>. Run it from your project root after creating your packages:</p>
+<pre class="codehilite"><code class="language-python">#!/usr/bin/env python3
+&quot;&quot;&quot;
+inject_packages.py — Injects local SPM packages into a .pbxproj file.
+
+Usage:
+    python3 inject_packages.py
+
+Edit the CONFIGURATION section below for your project.
+&quot;&quot;&quot;
+
+import re
+
+# ─── CONFIGURATION ────────────────────────────────────────────────────────────
+
+PBXPROJ_PATH = &quot;MyApp.xcodeproj/project.pbxproj&quot;
+
+# Package name → relative path from project root
+PACKAGES = {
+    &quot;Core&quot;:            &quot;Packages/Core&quot;,
+    &quot;Domain&quot;:          &quot;Packages/Domain&quot;,
+    &quot;DesignSystem&quot;:    &quot;Packages/DesignSystem&quot;,
+    &quot;AppCoordination&quot;: &quot;Packages/AppCoordination&quot;,
+    &quot;FeatureHome&quot;:     &quot;Packages/FeatureHome&quot;,
+    &quot;FeatureCart&quot;:     &quot;Packages/FeatureCart&quot;,
+}
+
+# Products to link to the main app target (by name, must match Package.swift product names)
+APP_TARGET_PRODUCTS = [
+    &quot;AppCoordination&quot;,
+    &quot;FeatureHome&quot;,
+    &quot;FeatureCart&quot;,
+]
+
+# Products to link to the test target
+TEST_TARGET_PRODUCTS = [
+    &quot;Domain&quot;,
+    &quot;FeatureHome&quot;,
+]
+
+# Native target IDs from your pbxproj (grep for PBXNativeTarget to find them)
+APP_TARGET_ID   = &quot;AABBCC001122334455667788&quot;   # ← replace with yours
+TEST_TARGET_ID  = &quot;AABBCC009988776655443322&quot;   # ← replace with yours
+APP_FRAMEWORKS_PHASE_ID  = &quot;AABBCC00FRAMEWORKS&quot;
+TEST_FRAMEWORKS_PHASE_ID = &quot;AABBCC00TESTFRAME&quot;
+PROJECT_OBJECT_ID        = &quot;AABBCC00PROJECTID&quot;
+
+# ─── IMPLEMENTATION ────────────────────────────────────────────────────────────
+# (UUID generation uses deterministic hex strings — replace with uuid.uuid4() for real use)
+
+def make_uid(prefix, name):
+    &quot;&quot;&quot;Generate a deterministic 24-char hex UID.&quot;&quot;&quot;
+    h = hex(abs(hash(prefix + name)))[2:].upper().zfill(24)[:24]
+    return h
+
+PKG_REF  = {n: make_uid(&quot;REF&quot;,  n) for n in PACKAGES}
+PKG_PROD = {n: make_uid(&quot;PROD&quot;, n) for n in PACKAGES}
+PKG_BF   = {n: make_uid(&quot;BF&quot;,   n) for n in PACKAGES}
+PKG_PROD_TEST = {n: make_uid(&quot;TPROD&quot;, n) for n in TEST_TARGET_PRODUCTS}
+PKG_BF_TEST   = {n: make_uid(&quot;TBF&quot;,   n) for n in TEST_TARGET_PRODUCTS}
+
+with open(PBXPROJ_PATH, &quot;r&quot;) as f:
+    content = f.read()
+
+# 1. XCLocalSwiftPackageReference entries
+ref_block = &quot;\n/* Begin XCLocalSwiftPackageReference section */\n&quot;
+for name, path in PACKAGES.items():
+    uid = PKG_REF[name]
+    ref_block += f'\t\t{uid} /* {name} */ = {{\n'
+    ref_block += f'\t\t\tisa = XCLocalSwiftPackageReference;\n'
+    ref_block += f'\t\t\trelativePath = {path};\n'
+    ref_block += f'\t\t}};\n'
+ref_block += &quot;/* End XCLocalSwiftPackageReference section */\n&quot;
+
+# 2. XCSwiftPackageProductDependency entries
+prod_block = &quot;\n/* Begin XCSwiftPackageProductDependency section */\n&quot;
+for name in PACKAGES:
+    uid = PKG_PROD[name]
+    ref_uid = PKG_REF[name]
+    prod_block += f'\t\t{uid} /* {name} */ = {{\n'
+    prod_block += f'\t\t\tisa = XCSwiftPackageProductDependency;\n'
+    prod_block += f'\t\t\tpackage = {ref_uid};\n'
+    prod_block += f'\t\t\tproductName = {name};\n'
+    prod_block += f'\t\t}};\n'
+for name in TEST_TARGET_PRODUCTS:
+    uid = PKG_PROD_TEST[name]
+    ref_uid = PKG_REF[name]
+    prod_block += f'\t\t{uid} /* {name}_test */ = {{\n'
+    prod_block += f'\t\t\tisa = XCSwiftPackageProductDependency;\n'
+    prod_block += f'\t\t\tpackage = {ref_uid};\n'
+    prod_block += f'\t\t\tproductName = {name};\n'
+    prod_block += f'\t\t}};\n'
+prod_block += &quot;/* End XCSwiftPackageProductDependency section */\n&quot;
+
+# 3. PBXBuildFile entries
+bf_entries = &quot;&quot;
+for name in APP_TARGET_PRODUCTS:
+    bf_entries += f'\t\t{PKG_BF[name]} /* {name} */ = {{isa = PBXBuildFile; productRef = {PKG_PROD[name]}; }};\n'
+for name in TEST_TARGET_PRODUCTS:
+    bf_entries += f'\t\t{PKG_BF_TEST[name]} /* {name}_test */ = {{isa = PBXBuildFile; productRef = {PKG_PROD_TEST[name]}; }};\n'
+
+# Inject before PBXFileReference section
+content = content.replace(
+    &quot;/* Begin PBXFileReference section */&quot;,
+    bf_entries + &quot;/* Begin PBXFileReference section */&quot;
+)
+
+# Inject before XCConfigurationList section
+content = content.replace(
+    &quot;/* Begin XCConfigurationList section */&quot;,
+    ref_block + prod_block + &quot;/* Begin XCConfigurationList section */&quot;
+)
+
+print(&quot;Done! Save content to&quot;, PBXPROJ_PATH)
+print(&quot;Note: You still need to update packageReferences, packageProductDependencies,&quot;)
+print(&quot;and Frameworks build phases manually or extend this script.&quot;)
+
+with open(PBXPROJ_PATH, &quot;w&quot;) as f:
+    f.write(content)
+</code></pre>
+
+<blockquote>
+<p><strong>⚠️ Warning:</strong> Always commit your project before running any pbxproj script. If the output is malformed, Xcode will refuse to open the project. Use <code>git diff</code> to review changes.</p>
+</blockquote>
+<h3 id="135-step-3-migrate-files-in-order">13.5 Step 3 — Migrate Files in Order</h3>
+<p><strong>Core first:</strong></p>
+<pre class="codehilite"><code class="language-bash"># Copy String+Ext.swift
+cp ShopApp/Utilities/String+Ext.swift \
+   Packages/Core/Sources/Core/String+Extension.swift
+
+# Add public to all declarations
+# Build the package
+swift build --package-path Packages/Core
+</code></pre>
+
+<p><strong>Domain next:</strong></p>
+<pre class="codehilite"><code class="language-bash"># Copy models
+cp ShopApp/Models/Product.swift \
+   Packages/Domain/Sources/Domain/Entities/Product.swift
+
+cp ShopApp/Models/CartItem.swift \
+   Packages/Domain/Sources/Domain/Entities/CartItem.swift
+
+# Copy repository protocols
+cp ShopApp/Repositories/ProductRepository.swift \
+   Packages/Domain/Sources/Domain/Repository/ProductRepository.swift
+
+# Add import Core to files that use Core extensions
+# Add public to all declarations
+# Build
+swift build --package-path Packages/Domain
+</code></pre>
+
+<p>Continue up the graph...</p>
+<hr />
+<h2 id="14-module-architecture-patterns-reference">14. Module Architecture Patterns Reference</h2>
+<h3 id="141-the-navigator-pattern-what-this-guide-uses">14.1 The Navigator Pattern (what this guide uses)</h3>
+<pre class="codehilite"><code>AppCoordinator
+    ├── owns NavigationPath
+    ├── owns login/logout logic
+    └── knows about AppRoute
+
+FeatureCoordinator
+    ├── has a reference to AppCoordinator
+    ├── translates FeatureRoute → AppRoute
+    └── delegates push/pop to AppCoordinator
+</code></pre>
+
+<p><strong>Pros:</strong> Simple, easy to understand, low boilerplate.<br />
+<strong>Cons:</strong> AppCoordinator knows about all routes; not ideal for very large apps.</p>
+<h3 id="142-the-router-protocol-pattern">14.2 The Router Protocol Pattern</h3>
+<p>Define a protocol in <code>AppCoordination</code> that all coordinators conform to:</p>
+<pre class="codehilite"><code class="language-swift">// AppCoordination
+public protocol Router {
+    func push&lt;R: Hashable&gt;(_ route: R)
+    func pop()
+    func popToRoot()
+    func present&lt;R: Identifiable&gt;(_ sheet: R)
+}
+</code></pre>
+
+<p>Features code against <code>Router</code>, not <code>AppCoordinator</code>. This lets you swap the coordinator implementation in tests.</p>
+<h3 id="143-the-tca-pattern-the-composable-architecture">14.3 The TCA Pattern (The Composable Architecture)</h3>
+<p>If you use TCA (by Point-Free), your modules become <code>Reducer</code>s instead of coordinators. Each feature module contains a <code>Feature.swift</code> with <code>State</code>, <code>Action</code>, <code>Reducer</code>, and <code>View</code>. The composition happens at the app level via <code>Scope</code> and <code>Store</code>.</p>
+<h3 id="144-the-mvvm-c-pattern-what-most-teams-use">14.4 The MVVM-C Pattern (what most teams use)</h3>
+<pre class="codehilite"><code>Feature Package:
+├── View (SwiftUI)
+├── ViewModel (ObservableObject or @Observable)
+└── Coordinator (in AppCoordination package)
+</code></pre>
+
+<p>This is what the GreyLearn modularization used. It's pragmatic and widely understood.</p>
+<hr />
+<h2 id="15-checklist-before-you-ship">15. Checklist — Before You Ship</h2>
+<p>Use this checklist after completing a modularization. Check every item before merging to <code>main</code>.</p>
+<h3 id="package-structure">Package Structure</h3>
+<ul>
+<li>[ ] All packages have a valid <code>Package.swift</code> with correct <code>platforms</code></li>
+<li>[ ] No circular dependencies in the graph</li>
+<li>[ ] Every package can be compiled independently: <code>swift build --package-path Packages/X</code></li>
+<li>[ ] All package names are consistent (e.g., all <code>FeatureX</code> or all <code>XFeature</code>)</li>
+</ul>
+<h3 id="access-control">Access Control</h3>
+<ul>
+<li>[ ] Every type used outside its package is <code>public</code></li>
+<li>[ ] Every <code>public struct</code> has an explicit <code>public init(...)</code></li>
+<li>[ ] Every <code>@Observable public final class</code> has a <code>public init()</code></li>
+<li>[ ] No unnecessary <code>public</code> on internal helpers</li>
+</ul>
+<h3 id="the-main-app-target">The Main App Target</h3>
+<ul>
+<li>[ ] The app target's source folder contains ONLY the composition root files</li>
+<li>[ ] No old source files remain in the app target that duplicate package files</li>
+<li>[ ] <code>@main</code> struct only imports the packages it directly uses</li>
+<li>[ ] <code>AppRouteView</code> (or equivalent) is in the app target, not a package</li>
+</ul>
+<h3 id="navigation">Navigation</h3>
+<ul>
+<li>[ ] <code>navigationDestination</code> is attached to a view INSIDE the <code>NavigationStack</code> content</li>
+<li>[ ] No feature package imports another feature package</li>
+<li>[ ] All coordinators delegate push/pop to the root coordinator</li>
+</ul>
+<h3 id="tests">Tests</h3>
+<ul>
+<li>[ ] Test imports use <code>import Domain</code> etc. (not <code>@testable import MyApp</code>)</li>
+<li>[ ] No test uses <code>UserDefaults.standard</code> — all use named suites</li>
+<li>[ ] All tests pass: <code>⌘U</code></li>
+</ul>
+<h3 id="build">Build</h3>
+<ul>
+<li>[ ] Clean build succeeds: <code>⌘⇧K</code> then <code>⌘B</code></li>
+<li>[ ] No warnings treated as errors that sneak through</li>
+<li>[ ] Archive succeeds: <strong>Product → Archive</strong></li>
+</ul>
+<hr />
+<h2 id="appendix-a-quick-command-reference">Appendix A — Quick Command Reference</h2>
+<pre class="codehilite"><code class="language-bash"># Validate a Package.swift
+swift package --package-path Packages/Domain dump-package
+
+# Build a single package
+swift build --package-path Packages/Domain
+
+# Test a single package
+swift test --package-path Packages/Domain
+
+# Build the full Xcode project
+xcodebuild \
+  -scheme MyApp \
+  -destination 'generic/platform=iOS Simulator' \
+  build
+
+# Run unit tests
+xcodebuild \
+  -scheme MyApp \
+  -destination 'platform=iOS Simulator,name=iPhone 16' \
+  test
+
+# Reset SPM package cache (if packages won't resolve)
+rm -rf ~/Library/Caches/org.swift.swiftpm
+</code></pre>
+
+<hr />
+<h2 id="appendix-b-glossary">Appendix B — Glossary</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Module</strong></td>
+<td>A compiled Swift unit with its own namespace and access boundary</td>
+</tr>
+<tr>
+<td><strong>Package</strong></td>
+<td>A directory with a <code>Package.swift</code> that defines one or more modules</td>
+</tr>
+<tr>
+<td><strong>Local package</strong></td>
+<td>A package that lives inside your repository (vs. fetched from GitHub)</td>
+</tr>
+<tr>
+<td><strong>Product</strong></td>
+<td>What a package exposes to the outside world (a library or executable)</td>
+</tr>
+<tr>
+<td><strong>Target</strong></td>
+<td>The actual compilation unit inside a package</td>
+</tr>
+<tr>
+<td><strong>Dependency graph</strong></td>
+<td>The directed acyclic graph of which modules depend on which</td>
+</tr>
+<tr>
+<td><strong>Composition root</strong></td>
+<td>The single place where all dependencies are wired together</td>
+</tr>
+<tr>
+<td><strong>Access control</strong></td>
+<td>Swift keywords (<code>public</code>, <code>internal</code>, <code>private</code>) that govern visibility</td>
+</tr>
+<tr>
+<td><strong>Circular dependency</strong></td>
+<td>When A depends on B and B depends on A — forbidden</td>
+</tr>
+<tr>
+<td><strong>Transitive dependency</strong></td>
+<td>If A→B→C, then C is a transitive dependency of A</td>
+</tr>
+<tr>
+<td><strong>pbxproj</strong></td>
+<td>The plain-text file inside <code>.xcodeproj</code> that describes the project structure</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="appendix-c-further-reading">Appendix C — Further Reading</h2>
+<ul>
+<li><a href="https://www.swift.org/package-manager/">Swift Package Manager Documentation</a> — official SPM reference</li>
+<li><a href="https://github.com/apple/swift-evolution/blob/main/proposals/0246-mathable.md">Swift Evolution SE-0246</a> — how modules work</li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2022/110359/">WWDC 2022 — Meet Swift Package plugins</a> — advanced SPM</li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2019/416/">WWDC 2019 — Binary Frameworks in Swift</a> — XCFrameworks context</li>
+<li><a href="https://www.pointfree.co/collections/composable-architecture">Point-Free — Modular Architecture</a> — TCA approach</li>
+</ul>
+<hr />
+<p><em>Guide version 1.0 — May 2026. Created for the GreyLearn iOS project.</em></p>
+
+</div>
+</body>
+</html>
