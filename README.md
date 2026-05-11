@@ -51,6 +51,21 @@ GreyLearn/
 └── Utilities/              # Extensions, components, modifiers
 ```
 
+## Preview
+
+<table>
+  <tr>
+    <td><img src="Screenshots/screen1.png" width="200"/></td>
+    <td><img src="Screenshots/screen2.png" width="200"/></td>
+    <td><img src="Screenshots/screen3.png" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="Screenshots/screen4.png" width="200"/></td>
+    <td><img src="Screenshots/screen5.png" width="200"/></td>
+    <td><img src="Screenshots/screen6.png" width="200"/></td>
+  </tr>
+</table>
+
 ## Requirements
 
 | Requirement | Version |
