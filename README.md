@@ -53,7 +53,7 @@ GreyLearn/
 
 ## Preview
 
-![App Demo](Screenshots/demo.gif)
+<img src="Screenshots/demo.gif" width="200"/>
 
 
 <table>

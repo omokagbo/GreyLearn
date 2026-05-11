@@ -18,6 +18,43 @@ final class LoginViewModel: ObservableObject {
     @Published var emailError: String? = nil
     @Published var isLoading: Bool = false
 
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        $firstName
+            .dropFirst()
+            .map { value -> String? in
+                value.trimmingCharacters(in: .whitespaces).isEmpty ? "First name is required" : nil
+            }
+            .assign(to: &$firstNameError)
+
+        $lastName
+            .dropFirst()
+            .map { value -> String? in
+                value.trimmingCharacters(in: .whitespaces).isEmpty ? "Last name is required" : nil
+            }
+            .assign(to: &$lastNameError)
+
+        $email
+            .dropFirst()
+            .map { value -> String? in
+                let trimmed = value.trimmingCharacters(in: .whitespaces)
+                if trimmed.isEmpty { return "Email is required" }
+                let regex = /^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/
+                return trimmed.wholeMatch(of: regex) == nil ? "Enter a valid email address" : nil
+            }
+            .assign(to: &$emailError)
+    }
+
+    var isFormValid: Bool {
+        let firstNameOk = !firstName.trimmingCharacters(in: .whitespaces).isEmpty
+        let lastNameOk = !lastName.trimmingCharacters(in: .whitespaces).isEmpty
+        let trimmedEmail = email.trimmingCharacters(in: .whitespaces)
+        let regex = /^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/
+        let emailOk = trimmedEmail.wholeMatch(of: regex) != nil
+        return firstNameOk && lastNameOk && emailOk
+    }
+
     var isValid: Bool {
         validateAll()
         return firstNameError == nil && lastNameError == nil && emailError == nil

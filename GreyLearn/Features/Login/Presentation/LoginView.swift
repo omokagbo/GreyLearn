@@ -80,17 +80,23 @@ struct LoginView: View {
                     .padding(.vertical, 15)
                     .frame(maxWidth: .infinity)
                     .foregroundStyle(.white)
-                    .background(Color.greyPurple)
+                    .background(Color.greyPurple.opacity(viewModel.isFormValid ? 1 : 0.4))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
-                .disabled(viewModel.isLoading)
+                .disabled(viewModel.isLoading || !viewModel.isFormValid)
                 .padding(.horizontal)
                 .padding(.top, 36)
                 .padding(.bottom, 40)
             }
         }
+        .scrollDismissesKeyboard(.immediately)
         .background(Color.greyLightGray.ignoresSafeArea())
         .navigationBarHidden(true)
+        .simultaneousGesture(
+            TapGesture().onEnded {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            }
+        )
     }
 
     private func inputField(
