@@ -6,7 +6,7 @@
 //  Copyright © 2026 Emmanuel Omokagbo. All rights reserved.
 
 import XCTest
-@testable import GreyLearn
+import Domain
 
 @MainActor
 final class CouseRepositoryTests: XCTestCase {

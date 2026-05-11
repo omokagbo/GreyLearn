@@ -6,6 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AC100002AAAA0002AAAA0002 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = AB100002AAAA0002AAAA0002 /* Domain */; };
+		AC100004AAAA0004AAAA0004 /* AppCoordination in Frameworks */ = {isa = PBXBuildFile; productRef = AB100004AAAA0004AAAA0004 /* AppCoordination */; };
+		AC100005AAAA0005AAAA0005 /* FeatureLaunch in Frameworks */ = {isa = PBXBuildFile; productRef = AB100005AAAA0005AAAA0005 /* FeatureLaunch */; };
+		AC100006AAAA0006AAAA0006 /* FeatureLogin in Frameworks */ = {isa = PBXBuildFile; productRef = AB100006AAAA0006AAAA0006 /* FeatureLogin */; };
+		AC100007AAAA0007AAAA0007 /* FeatureHome in Frameworks */ = {isa = PBXBuildFile; productRef = AB100007AAAA0007AAAA0007 /* FeatureHome */; };
+		AC100008AAAA0008AAAA0008 /* FeaturePath in Frameworks */ = {isa = PBXBuildFile; productRef = AB100008AAAA0008AAAA0008 /* FeaturePath */; };
+		AC100009AAAA0009AAAA0009 /* FeatureProfile in Frameworks */ = {isa = PBXBuildFile; productRef = AB100009AAAA0009AAAA0009 /* FeatureProfile */; };
+		AC10000AAAAA000AAAAA000A /* FeatureChat in Frameworks */ = {isa = PBXBuildFile; productRef = AB10000AAAAA000AAAAA000A /* FeatureChat */; };
+		AD100002AAAA0002AAAA0002 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = AE100002AAAA0002AAAA0002 /* Domain */; };
+		AD100007AAAA0007AAAA0007 /* FeatureHome in Frameworks */ = {isa = PBXBuildFile; productRef = AE100007AAAA0007AAAA0007 /* FeatureHome */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		A6B85DE82FAD2514004E663C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +78,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC100004AAAA0004AAAA0004 /* AppCoordination in Frameworks */,
+				AC100002AAAA0002AAAA0002 /* Domain in Frameworks */,
+				AC100005AAAA0005AAAA0005 /* FeatureLaunch in Frameworks */,
+				AC100006AAAA0006AAAA0006 /* FeatureLogin in Frameworks */,
+				AC100007AAAA0007AAAA0007 /* FeatureHome in Frameworks */,
+				AC100008AAAA0008AAAA0008 /* FeaturePath in Frameworks */,
+				AC100009AAAA0009AAAA0009 /* FeatureProfile in Frameworks */,
+				AC10000AAAAA000AAAAA000A /* FeatureChat in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +93,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD100002AAAA0002AAAA0002 /* Domain in Frameworks */,
+				AD100007AAAA0007AAAA0007 /* FeatureHome in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +148,14 @@
 			);
 			name = GreyLearn;
 			packageProductDependencies = (
+				AB100004AAAA0004AAAA0004 /* AppCoordination */,
+				AB100002AAAA0002AAAA0002 /* Domain */,
+				AB100005AAAA0005AAAA0005 /* FeatureLaunch */,
+				AB100006AAAA0006AAAA0006 /* FeatureLogin */,
+				AB100007AAAA0007AAAA0007 /* FeatureHome */,
+				AB100008AAAA0008AAAA0008 /* FeaturePath */,
+				AB100009AAAA0009AAAA0009 /* FeatureProfile */,
+				AB10000AAAAA000AAAAA000A /* FeatureChat */,
 			);
 			productName = GreyLearn;
 			productReference = A6B85DDA2FAD2512004E663C /* GreyLearn.app */;
@@ -148,6 +179,8 @@
 			);
 			name = GreyLearnTests;
 			packageProductDependencies = (
+				AE100002AAAA0002AAAA0002 /* Domain */,
+				AE100007AAAA0007AAAA0007 /* FeatureHome */,
 			);
 			productName = GreyLearnTests;
 			productReference = A6B85DE72FAD2514004E663C /* GreyLearnTests.xctest */;
@@ -208,6 +241,18 @@
 			);
 			mainGroup = A6B85DD12FAD2512004E663C;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AA100001AAAA0001AAAA0001 /* XCLocalSwiftPackageReference "Packages/Core" */,
+				AA100002AAAA0002AAAA0002 /* XCLocalSwiftPackageReference "Packages/Domain" */,
+				AA100003AAAA0003AAAA0003 /* XCLocalSwiftPackageReference "Packages/DesignSystem" */,
+				AA100004AAAA0004AAAA0004 /* XCLocalSwiftPackageReference "Packages/AppCoordination" */,
+				AA100005AAAA0005AAAA0005 /* XCLocalSwiftPackageReference "Packages/FeatureLaunch" */,
+				AA100006AAAA0006AAAA0006 /* XCLocalSwiftPackageReference "Packages/FeatureLogin" */,
+				AA100007AAAA0007AAAA0007 /* XCLocalSwiftPackageReference "Packages/FeatureHome" */,
+				AA100008AAAA0008AAAA0008 /* XCLocalSwiftPackageReference "Packages/FeaturePath" */,
+				AA100009AAAA0009AAAA0009 /* XCLocalSwiftPackageReference "Packages/FeatureProfile" */,
+				AA10000AAAAA000AAAAA000A /* XCLocalSwiftPackageReference "Packages/FeatureChat" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A6B85DDB2FAD2512004E663C /* Products */;
 			projectDirPath = "";
@@ -587,6 +632,102 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		AA100001AAAA0001AAAA0001 /* XCLocalSwiftPackageReference "Packages/Core" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Core;
+		};
+		AA100002AAAA0002AAAA0002 /* XCLocalSwiftPackageReference "Packages/Domain" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Domain;
+		};
+		AA100003AAAA0003AAAA0003 /* XCLocalSwiftPackageReference "Packages/DesignSystem" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/DesignSystem;
+		};
+		AA100004AAAA0004AAAA0004 /* XCLocalSwiftPackageReference "Packages/AppCoordination" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/AppCoordination;
+		};
+		AA100005AAAA0005AAAA0005 /* XCLocalSwiftPackageReference "Packages/FeatureLaunch" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/FeatureLaunch;
+		};
+		AA100006AAAA0006AAAA0006 /* XCLocalSwiftPackageReference "Packages/FeatureLogin" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/FeatureLogin;
+		};
+		AA100007AAAA0007AAAA0007 /* XCLocalSwiftPackageReference "Packages/FeatureHome" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/FeatureHome;
+		};
+		AA100008AAAA0008AAAA0008 /* XCLocalSwiftPackageReference "Packages/FeaturePath" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/FeaturePath;
+		};
+		AA100009AAAA0009AAAA0009 /* XCLocalSwiftPackageReference "Packages/FeatureProfile" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/FeatureProfile;
+		};
+		AA10000AAAAA000AAAAA000A /* XCLocalSwiftPackageReference "Packages/FeatureChat" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/FeatureChat;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AB100002AAAA0002AAAA0002 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA100002AAAA0002AAAA0002 /* XCLocalSwiftPackageReference "Packages/Domain" */;
+			productName = Domain;
+		};
+		AB100004AAAA0004AAAA0004 /* AppCoordination */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA100004AAAA0004AAAA0004 /* XCLocalSwiftPackageReference "Packages/AppCoordination" */;
+			productName = AppCoordination;
+		};
+		AB100005AAAA0005AAAA0005 /* FeatureLaunch */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA100005AAAA0005AAAA0005 /* XCLocalSwiftPackageReference "Packages/FeatureLaunch" */;
+			productName = FeatureLaunch;
+		};
+		AB100006AAAA0006AAAA0006 /* FeatureLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA100006AAAA0006AAAA0006 /* XCLocalSwiftPackageReference "Packages/FeatureLogin" */;
+			productName = FeatureLogin;
+		};
+		AB100007AAAA0007AAAA0007 /* FeatureHome */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA100007AAAA0007AAAA0007 /* XCLocalSwiftPackageReference "Packages/FeatureHome" */;
+			productName = FeatureHome;
+		};
+		AB100008AAAA0008AAAA0008 /* FeaturePath */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA100008AAAA0008AAAA0008 /* XCLocalSwiftPackageReference "Packages/FeaturePath" */;
+			productName = FeaturePath;
+		};
+		AB100009AAAA0009AAAA0009 /* FeatureProfile */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA100009AAAA0009AAAA0009 /* XCLocalSwiftPackageReference "Packages/FeatureProfile" */;
+			productName = FeatureProfile;
+		};
+		AB10000AAAAA000AAAAA000A /* FeatureChat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA10000AAAAA000AAAAA000A /* XCLocalSwiftPackageReference "Packages/FeatureChat" */;
+			productName = FeatureChat;
+		};
+		AE100002AAAA0002AAAA0002 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA100002AAAA0002AAAA0002 /* XCLocalSwiftPackageReference "Packages/Domain" */;
+			productName = Domain;
+		};
+		AE100007AAAA0007AAAA0007 /* FeatureHome */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA100007AAAA0007AAAA0007 /* XCLocalSwiftPackageReference "Packages/FeatureHome" */;
+			productName = FeatureHome;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A6B85DD22FAD2512004E663C /* Project object */;
 }
