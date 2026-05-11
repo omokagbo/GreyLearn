@@ -53,6 +53,9 @@ GreyLearn/
 
 ## Preview
 
+![App Demo](Screenshots/demo.gif)
+
+
 <table>
   <tr>
     <td><img src="Screenshots/screen1.png" width="200"/></td>
