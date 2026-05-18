@@ -11,8 +11,13 @@ struct HomeDependencies {
     let courseRepository: CourseRepository
     let localRepository: LocalRepository
 
-    static let live = HomeDependencies(
+    static let mock = HomeDependencies(
         courseRepository: MockCourseRepository(),
         localRepository: LocalRepository()
     )
+    
+    static let homeViewModel = HomeViewModel(
+        dependencies: .mock
+    )
+    
 }

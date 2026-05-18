@@ -1,14 +1,15 @@
 //
-// CustomBackButtonModifier.swift
-// GreyLearn
-
+//  CustomBackButtonModifier.swift
+//  GreyLearn
+//
 //  Created by Emmanuel Omokagbo on 5/10/26
 //  Copyright © 2026 Emmanuel Omokagbo. All rights reserved.
-	
+//
+
 import SwiftUI
 
 struct CustomBackButtonModifier: ViewModifier {
-    @Environment(AppCoordinator.self) private var appCoordinator
+    @Environment(HomeCoordinator.self) private var homeCoordinator
 
     func body(content: Content) -> some View {
         content
@@ -16,7 +17,7 @@ struct CustomBackButtonModifier: ViewModifier {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        appCoordinator.pop()
+                        homeCoordinator.pop()
                     } label: {
                         Image(systemName: "arrow.backward")
                             .font(.headline)

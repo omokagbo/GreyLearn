@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct LocalStorageManager {
+final class LocalStorageManager {
     private let defaults: UserDefaults
 
     static let shared = LocalStorageManager()

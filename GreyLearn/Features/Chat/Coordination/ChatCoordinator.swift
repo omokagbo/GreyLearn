@@ -10,17 +10,8 @@ import SwiftUI
 
 @Observable
 final class ChatCoordinator: Coordinator {
-    private let appCoordinator: AppCoordinator
+    init(appCoordinator: AppCoordinator) {}
 
-    init(appCoordinator: AppCoordinator) {
-        self.appCoordinator = appCoordinator
-    }
-
-    func pop() {
-        appCoordinator.pop()
-    }
-
-    func popToRoot() {
-        appCoordinator.popToRoot()
-    }
+    func pop() {}
+    func popToRoot() {}
 }

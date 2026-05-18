@@ -10,9 +10,9 @@ import SwiftUI
 
 @Observable
 final class AppCoordinator {
-    var path = NavigationPath()
     var isLoggedIn: Bool
     var currentUser: User?
+    var isLaunching: Bool = true
 
     @ObservationIgnored
     private let storage: LocalStorageManager
@@ -35,19 +35,6 @@ final class AppCoordinator {
         chatCoordinator    = ChatCoordinator(appCoordinator: self)
     }
 
-    func push(_ route: AppRoute) {
-        path.append(route)
-    }
-
-    func pop() {
-        guard !path.isEmpty else { return }
-        path.removeLast()
-    }
-
-    func popToRoot() {
-        path = NavigationPath()
-    }
-
     func login(user: User) {
         storage.saveUser(user)
         storage.saveLoginState(true)
@@ -62,6 +49,5 @@ final class AppCoordinator {
         storage.remove(for: .lastStreakDate)
         isLoggedIn  = false
         currentUser = nil
-        path        = NavigationPath()
     }
 }

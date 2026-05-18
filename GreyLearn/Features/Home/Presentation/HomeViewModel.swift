@@ -15,7 +15,7 @@ final class HomeViewModel: ObservableObject {
     private let repository: CourseRepository
     private let localRepo: LocalRepository
 
-    init(dependencies: HomeDependencies = .live) {
+    init(dependencies: HomeDependencies = .mock) {
         self.repository = dependencies.courseRepository
         self.localRepo  = dependencies.localRepository
         let saved = dependencies.localRepository.loadStreakCount()

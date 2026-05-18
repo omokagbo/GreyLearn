@@ -9,17 +9,8 @@ import SwiftUI
 
 @Observable
 final class ProfileCoordinator: Coordinator {
-    private let appCoordinator: AppCoordinator
+    init(appCoordinator: AppCoordinator) {}
 
-    init(appCoordinator: AppCoordinator) {
-        self.appCoordinator = appCoordinator
-    }
-
-    func pop() {
-        appCoordinator.pop()
-    }
-
-    func popToRoot() {
-        appCoordinator.popToRoot()
-    }
+    func pop() {}
+    func popToRoot() {}
 }

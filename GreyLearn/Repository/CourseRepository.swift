@@ -23,3 +23,20 @@ struct MockCourseRepository: CourseRepository {
         return Course.mockCourse
     }
 }
+
+
+struct RemoteNetworkCourseRepository: CourseRepository {
+    private let client: HTTPClient
+
+    init(client: HTTPClient = HTTPClient()) {
+        self.client = client
+    }
+    
+    func fetchActiveCourse() async throws -> Course {
+        let request = APIRequest(
+            path: "/active-course",
+            method: .get
+        )
+        return try await client.send(request)
+    }
+}

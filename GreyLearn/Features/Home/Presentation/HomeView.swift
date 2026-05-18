@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @Environment(AppCoordinator.self) private var appCoordinator
+    @Environment(HomeCoordinator.self) private var homeCoordinator
     @StateObject private var viewModel: HomeViewModel
     private let user: User
     
@@ -23,24 +23,24 @@ struct HomeView: View {
         currentSection?.topics.first(where: { !$0.isCompleted })
     }
     
-    init(user: User, dependencies: HomeDependencies = .live) {
+    init(user: User, dependencies: HomeDependencies = .mock) {
         self.user = user
         _viewModel = StateObject(wrappedValue: HomeViewModel(dependencies: dependencies))
     }
     
     var body: some View {
-        @Bindable var appCoordinator = appCoordinator
-        
-        NavigationStack(path: $appCoordinator.path) {
+        @Bindable var homeCoordinator = homeCoordinator
+
+        NavigationStack(path: $homeCoordinator.path) {
             ScrollView {
                 VStack {
                     VStack {
                         HomeHeaderCard(
                                 initials: user.initials,
                                 streak: viewModel.streak,
-                                onProfileTap: { appCoordinator.homeCoordinator.push(.profile) },
+                                onProfileTap: { homeCoordinator.push(.profile) },
                                 onStreakTap: { viewModel.recordActivity() },
-                                onChatTap: { appCoordinator.homeCoordinator.push(.chat) }
+                                onChatTap: { homeCoordinator.push(.chat) }
                             )
                             .padding(.top, 60)
                             .padding(.horizontal)
@@ -71,7 +71,7 @@ struct HomeView: View {
                                 sectionName: currentSection?.name ?? "",
                                 onViewPath: {
                                     if let course = viewModel.activeCourse {
-                                        appCoordinator.homeCoordinator.push(.path(course: course))
+                                        homeCoordinator.push(.path(course: course))
                                     }
                                 }
                             )
@@ -88,9 +88,9 @@ struct HomeView: View {
                 viewModel.getCourse()
                 viewModel.getStreak()
             }
-            .navigationDestination(for: AppRoute.self) { route in
-                AppRouteView(route: route)
-                    .environment(appCoordinator)
+            .navigationDestination(for: HomeRoute.self) { route in
+                HomeRouteView(route: route)
+                    .environment(homeCoordinator)
             }
         }
     }
