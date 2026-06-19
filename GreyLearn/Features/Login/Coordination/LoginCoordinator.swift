@@ -19,11 +19,7 @@ final class LoginCoordinator: Coordinator {
         appCoordinator.login(user: user)
     }
 
-    func pop() {
-        appCoordinator.pop()
-    }
+    func pop() {}
     
-    func popToRoot() {
-        appCoordinator.popToRoot()
-    }
+    func popToRoot() {}
 }

@@ -11,32 +11,11 @@ import SwiftUI
 @main
 struct GreyLearnApp: App {
     @State private var appCoordinator = AppCoordinator()
-    @State private var isLaunching = true
 
     var body: some Scene {
         WindowGroup {
-            ZStack {
-                if appCoordinator.isLoggedIn, let user = appCoordinator.currentUser {
-                    HomeView(user: user)
-                        .environment(appCoordinator)
-                } else {
-                    LoginView()
-                        .environment(appCoordinator.loginCoordinator)
-                }
-
-                if isLaunching {
-                    LaunchScreenView()
-                        .transition(.opacity)
-                        .zIndex(1)
-                }
-            }
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                    withAnimation(.easeOut(duration: 0.5)) {
-                        isLaunching = false
-                    }
-                }
-            }
+            AppCoordinatorView()
+                .environment(appCoordinator)
         }
     }
 }

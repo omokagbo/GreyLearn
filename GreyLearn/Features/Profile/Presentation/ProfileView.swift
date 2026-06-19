@@ -49,6 +49,7 @@ struct ProfileView: View {
         .background(Color.greyLightGray.ignoresSafeArea())
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
+        .customBackButton()
     }
 
     private func profileRow(label: String, value: String) -> some View {

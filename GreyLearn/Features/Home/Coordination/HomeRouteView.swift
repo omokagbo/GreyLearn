@@ -1,16 +1,17 @@
 //
-// AppRouteView.swift
+// HomeRouteView.swift
 // GreyLearn
 
-//  Created by Emmanuel Omokagbo on 5/7/26
+//  Created by Emmanuel Omokagbo on 5/17/26
 //  Copyright © 2026 Emmanuel Omokagbo. All rights reserved.
-    
+
 import SwiftUI
 
-struct AppRouteView: View {
+struct HomeRouteView: View {
+    @Environment(HomeCoordinator.self) private var homeCoordinator
     @Environment(AppCoordinator.self) private var appCoordinator
 
-    let route: AppRoute
+    let route: HomeRoute
 
     var body: some View {
         switch route {

@@ -9,12 +9,9 @@ import SwiftUI
 
 @Observable
 final class PathCoordinator: Coordinator {
-    private let appCoordinator: AppCoordinator
     var presentedRoute: PathSheetRoute? = nil
 
-    init(appCoordinator: AppCoordinator) {
-        self.appCoordinator = appCoordinator
-    }
+    init(appCoordinator: AppCoordinator) {}
 
     func push(_ route: PathRoute) {
         switch route {
@@ -23,11 +20,6 @@ final class PathCoordinator: Coordinator {
         }
     }
 
-    func pop() {
-        appCoordinator.pop()
-    }
-    
-    func popToRoot() {
-        appCoordinator.popToRoot()
-    }
+    func pop() {}
+    func popToRoot() {}
 }

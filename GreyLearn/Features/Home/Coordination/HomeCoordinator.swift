@@ -9,31 +9,21 @@ import SwiftUI
 
 @Observable
 final class HomeCoordinator: Coordinator {
-    private let appCoordinator: AppCoordinator
+    // Each feature owns its own path — scoped navigationDestination per feature.
+    var path: [HomeRoute] = []
 
-    init(appCoordinator: AppCoordinator) {
-        self.appCoordinator = appCoordinator
-    }
+    init(appCoordinator: AppCoordinator) {}
 
     func push(_ route: HomeRoute) {
-        switch route {
-        case .profile:
-            appCoordinator.push(AppRoute.profile)
-        case .chat:
-            appCoordinator.push(AppRoute.chat)
-        case .path(let course):
-            appCoordinator.push(AppRoute.path(course: course))
-//        case .todayLearning:
-//            appCoordinator.push(AppRoute.todayLearning)
-        }
+        path.append(route)
     }
 
     func pop() {
-        appCoordinator.pop()
+        guard !path.isEmpty else { return }
+        path.removeLast()
     }
-    
+
     func popToRoot() {
-        appCoordinator.popToRoot()
+        path = []
     }
-    
 }
